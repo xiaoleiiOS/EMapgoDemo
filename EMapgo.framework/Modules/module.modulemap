@@ -1,0 +1,6 @@
+framework module EMapgo {
+  umbrella header "EMapgo.h"
+
+  export *
+  module * { export * }
+}

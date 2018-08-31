@@ -1,0 +1,11 @@
+framework module EMapgoPOI {
+  umbrella header "EMapgoPOI.h"
+
+  export *
+  module * { export * }
+}
+
+module EMapgoPOI.Swift {
+    header "EMapgoPOI-Swift.h"
+    requires objc
+}
