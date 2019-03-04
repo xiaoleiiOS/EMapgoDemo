@@ -40,6 +40,7 @@
 
 - (MGLMapView *)mapView{
     if (_mapView == nil) {
+        
         NSURL *url = [NSURL URLWithString:@"http://tiles.emapgo.cn/styles/outdoor/style.json"];
         _mapView = [[MGLMapView alloc] initWithFrame:self.view.bounds styleURL:url];
         _mapView.centerCoordinate = CLLocationCoordinate2DMake(39.914935, 116.405419);

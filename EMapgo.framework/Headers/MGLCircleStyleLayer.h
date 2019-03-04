@@ -78,6 +78,16 @@ typedef NS_ENUM(NSUInteger, MGLCircleTranslationAnchor) {
  new circle style layer and add it to the style using a method such as
  `-[MGLStyle addLayer:]`.
 
+ #### Related examples
+ See the <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/dds-circle-layer/">Data-driven
+ circles</a>, <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/shape-collection/">Add
+ multiple shapes from a single shape source</a>, and <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/clustering/">Cluster point
+ data</a> examples to learn how to add circles to your map using this style
+ layer.
+
  ### Example
 
  ```swift
@@ -263,7 +273,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-circle-pitch-scale"><code>circle-pitch-scale</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -393,7 +403,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-circle-translate"><code>circle-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -419,7 +429,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-circle-translate"><code>circle-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -455,7 +465,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-circle-translate-anchor"><code>circle-translate-anchor</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  

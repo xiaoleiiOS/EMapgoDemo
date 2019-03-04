@@ -16,7 +16,7 @@ typedef NSString *MGLExpressionInterpolationMode NS_TYPED_ENUM;
  
  This attribute corresponds to the `linear` value in the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-interpolate"><code>interpolate</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionInterpolationModeLinear;
 
@@ -25,7 +25,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  
  This attribute corresponds to the `exponential` value in the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-interpolate"><code>interpolate</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionInterpolationModeExponential;
 
@@ -34,14 +34,14 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  
  This attribute corresponds to the `cubic-bezier` value in the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-interpolate"><code>interpolate</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionInterpolationModeCubicBezier;
 
 /**
- Methods for creating expressions that use Mapbox-specific functionality and for
+ Methods for creating expressions that use EMapgo-specific functionality and for
  converting to and from the JSON format defined in the
- <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions">Mapbox Style Specification</a>.
+ <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions">EMapgo Style Specification</a>.
  */
 @interface NSExpression (MGLAdditions)
 
@@ -50,35 +50,42 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
 /**
  `NSExpression` variable that corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-zoom"><code>zoom</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 @property (class, nonatomic, readonly) NSExpression *zoomLevelVariableExpression;
 
 /**
  `NSExpression` variable that corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-heatmap-density"><code>heatmap-density</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 @property (class, nonatomic, readonly) NSExpression *heatmapDensityVariableExpression;
 
 /**
  `NSExpression` variable that corresponds to the
+ <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-line-progress"><code>line-progress</code></a>
+ expression operator in the EMapgo Style Specification.
+ */
+@property (class, nonatomic, readonly) NSExpression *lineProgressVariableExpression;
+
+/**
+ `NSExpression` variable that corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#eexpressions-geometry-type"><code>geometry-type</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 @property (class, nonatomic, readonly) NSExpression *geometryTypeVariableExpression;
 
 /**
  `NSExpression` variable that corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-id"><code>id</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 @property (class, nonatomic, readonly) NSExpression *featureIdentifierVariableExpression;
 
 /**
  `NSExpression` variable that corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-properties"><code>properties</code></a>
- expression operator in the Mapbox Style Specification.
+ expression operator in the EMapgo Style Specification.
  */
 @property (class, nonatomic, readonly) NSExpression *featureAttributesVariableExpression;
 
@@ -105,6 +112,13 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  @param steppingExpression The stepping expression.
  @param minimumExpression The expression which could be a constant or function expression.
  @param stops The stops must be an `NSDictionary` constant `NSExpression`.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/dds-circle-layer/">
+ Data-driven circles</a>, <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering/">
+ Cluster point data</a>, and <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">
+ Use images to cluster point data</a> examples to learn how to use this
+ expression to style a map layer based on an attribute value.
  */
 + (instancetype)mgl_expressionForSteppingExpression:(nonnull NSExpression*)steppingExpression fromExpression:(nonnull NSExpression *)minimumExpression stops:(nonnull NSExpression*)stops NS_SWIFT_NAME(init(forMGLStepping:from:stops:));
 
@@ -118,6 +132,11 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  `MGLExpressionInterpolationModeCubicBezier`.
  @param parameters The parameters expression.
  @param stops The stops expression.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/heatmap-example/">
+ Create a heatmap layer</a> example to learn how to style an `MGLHeatmapStyleLayer`
+ based on zoom level and point density with this expression.
  */
 + (instancetype)mgl_expressionForInterpolatingExpression:(nonnull NSExpression*)inputExpression withCurveType:(nonnull MGLExpressionInterpolationMode)curveType parameters:(nullable NSExpression *)parameters stops:(nonnull NSExpression*)stops NS_SWIFT_NAME(init(forMGLInterpolating:curveType:parameters:stops:));
 
@@ -150,7 +169,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  from JSON data.
  
  The Foundation object is interpreted according to the
- [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions).
+ [EMapgo Style Specification](https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions).
  See the
  “[Information for Style Authors](../for-style-authors.html#setting-attribute-values)”
  guide for a correspondence of operators and types between the style
@@ -167,7 +186,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  An equivalent Foundation object that can be serialized as JSON.
  
  The Foundation object conforms to the
- [Mapbox Style Specification](https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions).
+ [EMapgo Style Specification](https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions).
  See the
  “[Information for Style Authors](../for-style-authors.html#setting-attribute-values)”
  guide for a correspondence of operators and types between the style
@@ -185,7 +204,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLExpressionInterpolationMode MGLExpressionI
  
  This method assumes the receiver refers to the feature attributes that are
  available in vector tiles supplied by the
- <a href="https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">Mapbox Streets source</a>.
+ <a href="https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">EMapgo Streets source</a>.
  On iOS, the user can set the system’s preferred language in Settings, General
  Settings, Language & Region. On macOS, the user can set the system’s preferred
  language in the Language & Region pane of System Preferences.

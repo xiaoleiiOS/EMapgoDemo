@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
  
  To minimize the resources required by an irregularly shaped offline region,
  use the MGLShapeOfflineRegion class instead.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/offline-pack/">
+ Download an offline map</a> example to learn how to define an offline region
+ to be downloaded to a user's device.
  */
 MGL_EXPORT
 @interface MGLTilePyramidOfflineRegion : NSObject <MGLOfflineRegion, NSSecureCoding, NSCopying>
@@ -45,7 +50,7 @@ MGL_EXPORT
  This is the designated initializer for `MGLTilePyramidOfflineRegion`.
 
  @param styleURL URL of the map style for which to download resources. The URL
-    may be a full HTTP or HTTPS URL or a Mapbox URL indicating the style’s map
+    may be a full HTTP or HTTPS URL or a EMapgo URL indicating the style’s map
     ID (`mapbox://styles/{user}/{style}`). Specify `nil` for the default style.
     Relative file URLs cannot be used as offline style URLs. To download the
     online resources required by a local style, specify a URL to an online copy

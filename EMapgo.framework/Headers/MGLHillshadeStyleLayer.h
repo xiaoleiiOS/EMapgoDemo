@@ -31,11 +31,11 @@ typedef NS_ENUM(NSUInteger, MGLHillshadeIlluminationAnchor) {
  Use a hillshade style layer to configure the color parameters of raster tiles
  loaded by an `MGLRasterDEMSource` object. For example, you could use a
  hillshade style layer to render <a
- href="https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb">Mapbox
+ href="https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb">EMapgo
  Terrain-RGB</a> data.
  
  To display posterized hillshading based on vector shapes, as with the <a
- href="https://www.mapbox.com/vector-tiles/mapbox-terrain/">Mapbox Terrain</a>
+ href="https://www.mapbox.com/vector-tiles/mapbox-terrain/">EMapgo Terrain</a>
  source, use an `MGLVectorTileSource` object in conjunction with several
  `MGLFillStyleLayer` objects.
 

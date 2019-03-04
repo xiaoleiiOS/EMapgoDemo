@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  `MGLVectorTileSource` is a map content source that supplies tiled vector data
- in <a href="https://www.mapbox.com/vector-tiles/">Mapbox Vector Tile</a> format
+ in <a href="https://www.mapbox.com/vector-tiles/">EMapgo Vector Tile</a> format
  to be shown on the map. The location of and metadata about the tiles are
  defined either by an option dictionary or by an external file that conforms to
  the
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `MGLVectorTileSource` is optimized for data sets that are too large to fit
  completely in memory, such as vector tile sets or data sets managed in
- <a href="https://www.mapbox.com/studio/">Mapbox Studio</a>. For
+ <a href="https://www.mapbox.com/studio/">EMapgo Studio</a>. For
  <a href="http://geojson.org/">GeoJSON</a> data, use the `MGLShapeSource`
  class. For tiled data that changes dynamically, the `MGLComputedShapeSource`
  class may be a suitable alternative.
@@ -36,10 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
  `sourceLayerIdentifier` property.
  
  Commonly used vector tile sources include
- <a href="https://www.mapbox.com/vector-tiles/mapbox-streets/">Mapbox Streets</a>,
- <a href="https://www.mapbox.com/vector-tiles/mapbox-terrain/">Mapbox Terrain</a>,
+ <a href="https://www.mapbox.com/vector-tiles/mapbox-streets/">EMapgo Streets</a>,
+ <a href="https://www.mapbox.com/vector-tiles/mapbox-terrain/">EMapgo Terrain</a>,
  and
- <a href="https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/">Mapbox Traffic</a>.
+ <a href="https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/">EMapgo Traffic</a>.
 
  ### Example
 
@@ -48,11 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
      .minimumZoomLevel: 9,
      .maximumZoomLevel: 16,
      .attributionInfos: [
-         MGLAttributionInfo(title: NSAttributedString(string: "© Mapbox"), url: URL(string: "https://mapbox.com"))
+         MGLAttributionInfo(title: NSAttributedString(string: "© EMapgo"), url: URL(string: "https://mapbox.com"))
      ]
  ])
  mapView.style?.addSource(source)
  ```
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/dds-circle-layer/">
+ Data-driven circles</a> example to learn how to add data to your map using
+ an `MGLVectorTileSource` object.
  */
 MGL_EXPORT
 @interface MGLVectorTileSource : MGLTileSource
@@ -66,8 +71,8 @@ MGL_EXPORT
  After initializing and configuring the source, add it to a map view’s style
  using the `-[MGLStyle addSource:]` method.
 
- The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by Mapbox, a
- Mapbox URL indicating a map identifier (`mapbox://<mapid>`). The URL should
+ The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by EMapgo, a
+ EMapgo URL indicating a map identifier (`mapbox://<mapid>`). The URL should
  point to a JSON file that conforms to the
  <a href="https://github.com/mapbox/tilejson-spec/">TileJSON specification</a>.
 

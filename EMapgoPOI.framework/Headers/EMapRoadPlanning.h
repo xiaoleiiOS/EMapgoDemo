@@ -7,13 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EMapgoRouteStepModel.h"
 
 @interface EMapRoadPlanning : NSObject
 
 typedef void (^EMapRoadPlanSuccessBlock)(NSDictionary *data);
 typedef void (^EMapRoadPlanFailureBlock)(NSError *error);
 
-//Routing profile; either  mapbox/driving-traffic , mapbox/driving ,  mapbox/walking , or  mapbox/cycling
+typedef void (^EMapLocationIsContainSuccessBlock)(NSDictionary *data);
+typedef void (^EMapLocationIsContainFailureBlock)(NSError *error);
+
+
+//起始点坐标点，必须包含经纬度
+@property (nonatomic, strong) EMapgoRouteStepModel *startModel;
+
+//终点坐标点，必须包含经纬度
+@property (nonatomic, strong) EMapgoRouteStepModel *endModel;
+
+//Routing profile; either  driving1 ,  walking1 , or  transit
 @property (nonatomic, copy) NSString *profile;
 
 //Semicolon-separated list of  {longitude},{latitude} coordinate pairs to visit in order. There can be between 2 and 25 coordinates.
@@ -69,5 +80,27 @@ typedef void (^EMapRoadPlanFailureBlock)(NSError *error);
 @property(nonatomic, copy) NSString *language;
 
 - (void)startRoadPlanningWithsuccess:(EMapRoadPlanSuccessBlock)successBlock failure:(EMapRoadPlanFailureBlock)failureBlock;
+
+
+
+/**
+ 根据起始点和终点，规划出在景区的路线方案，并返回路线数据和路线类型
+
+ 注：必须包含起始点和终点的经纬度，才可以调用
+ @param successBlock 成功回调---返回数据(路线数据："data", and 路线方案："profile")
+ @param failureBlock 失败回调
+ */
+- (void)roadPlanningInWuzhenSuccess:(EMapRoadPlanSuccessBlock)successBlock failure:(EMapRoadPlanFailureBlock)failureBlock;
+
+/**
+ 查询坐标点是否在范围之内
+
+ @param lon 经度，单位度
+ @param lat 纬度，单位度
+ @param startend 开始或者结束，可以配置start，或者是end
+ @param successBlock 成功回调---返回转换后的位置
+ @param failureBlock 失败回调
+ */
+- (void)searchLocationIsContainWithLon:(NSString *)lon lat:(NSString *)lat startend:(NSString *)startend success:(EMapLocationIsContainSuccessBlock)successBlock failure:(EMapLocationIsContainFailureBlock)failureBlock;
 
 @end

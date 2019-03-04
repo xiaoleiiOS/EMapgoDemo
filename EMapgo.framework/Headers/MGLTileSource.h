@@ -126,7 +126,7 @@ typedef NS_ENUM(NSUInteger, MGLTileCoordinateSystem) {
      The origin is at the top-left (northwest), and `y` values increase
      southwards.
 
-     This tile coordinate system is used by Mapbox and OpenStreetMap tile
+     This tile coordinate system is used by EMapgo and OpenStreetMap tile
      servers.
      */
     MGLTileCoordinateSystemXYZ = 0,
@@ -148,7 +148,7 @@ typedef NS_ENUM(NSUInteger, MGLTileCoordinateSystem) {
 typedef NS_ENUM(NSUInteger, MGLDEMEncoding) {
 
     /**
-     Raster tiles generated with the [Mapbox encoding formula](https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb).
+     Raster tiles generated with the [EMapgo encoding formula](https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb).
     */
     MGLDEMEncodingMapbox = 0,
 
@@ -168,8 +168,8 @@ typedef NS_ENUM(NSUInteger, MGLDEMEncoding) {
  control the appearance of content supplied by the tile source.
  
  A tile source is also known as a tile set. To learn about the structure of a
- Mapbox-hosted tile set, view it in
- <a href="https://www.mapbox.com/studio/tilesets/">Mapbox Studio’s Tilesets editor</a>.
+ EMapgo-hosted tile set, view it in
+ <a href="https://www.mapbox.com/studio/tilesets/">EMapgo Studio’s Tilesets editor</a>.
 
  Create instances of `MGLRasterTileSource` and `MGLVectorTileSource` in order
  to use `MGLTileSource`'s properties and methods. Do not create instances of

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  integers.
 
  The default value for this option is 512. Version 4 of the
- <a href="https://www.mapbox.com/api-documentation/#maps">Mapbox Maps API</a>
+ <a href="https://www.mapbox.com/api-documentation/#maps">EMapgo Maps API</a>
  requires a value of 256, as do many third-party tile servers, so consult your
  provider’s documentation for the correct value.
 
@@ -47,11 +47,16 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLTileSourceOption MGLTileSourceOptionTileSi
      .maximumZoomLevel: 16,
      .tileSize: 512,
      .attributionInfos: [
-         MGLAttributionInfo(title: NSAttributedString(string: "© Mapbox"), url: URL(string: "https://mapbox.com"))
+         MGLAttributionInfo(title: NSAttributedString(string: "© EMapgo"), url: URL(string: "https://mapbox.com"))
      ]
  ])
  mapView.style?.addSource(source)
  ```
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/source-custom-raster/">
+ Add raster imagery</a> example to learn how to add a `MGLRasterStyleLayer`
+ to your map using an `MGLRasterTileSource`.
  */
 MGL_EXPORT
 @interface MGLRasterTileSource : MGLTileSource
@@ -65,12 +70,12 @@ MGL_EXPORT
  After initializing and configuring the source, add it to a map view’s style
  using the `-[MGLStyle addSource:]` method.
 
- The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by Mapbox, a
- Mapbox URL indicating a map identifier (`mapbox://<mapid>`). The URL should
+ The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by EMapgo, a
+ EMapgo URL indicating a map identifier (`mapbox://<mapid>`). The URL should
  point to a JSON file that conforms to the
  <a href="https://github.com/mapbox/tilejson-spec/">TileJSON specification</a>.
 
- If a Mapbox URL is specified, this source uses a tile size of 256. For all
+ If a EMapgo URL is specified, this source uses a tile size of 256. For all
  other tile sets, the default value is 512. (See the
  `MGLTileSourceOptionTileSize` documentation for more information about tile
  sizes.) If you need to use a tile size other than the default, use the
@@ -91,8 +96,8 @@ MGL_EXPORT
  After initializing and configuring the source, add it to a map view’s style
  using the `-[MGLStyle addSource:]` method.
 
- The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by Mapbox, a
- Mapbox URL indicating a map identifier (`mapbox://<mapid>`). The URL should
+ The URL may be a full HTTP or HTTPS URL or, for tile sets hosted by EMapgo, a
+ EMapgo URL indicating a map identifier (`mapbox://<mapid>`). The URL should
  point to a JSON file that conforms to the
  <a href="https://github.com/mapbox/tilejson-spec/">TileJSON specification</a>.
 

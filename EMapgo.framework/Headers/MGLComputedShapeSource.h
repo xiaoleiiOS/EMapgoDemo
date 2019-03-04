@@ -74,9 +74,9 @@ FOUNDATION_EXTERN MGL_EXPORT MGLExceptionName const MGLInvalidDatasourceExceptio
  `MGLComputedShapeSource` is similar to `MGLShapeSource` but is optimized for
  data sets that change dynamically or are too large to fit completely in memory.
  It is also useful for data that is divided into tiles in a format other than
- <a href="https://www.mapbox.com/vector-tiles/">Mapbox Vector Tiles</a>. For
+ <a href="https://www.mapbox.com/vector-tiles/">EMapgo Vector Tiles</a>. For
  <a href="http://geojson.org/">GeoJSON</a> data, use the `MGLShapeSource` class.
- For static tiles or Mapbox Vector Tiles, use the `MGLVectorTileSource` class.
+ For static tiles or EMapgo Vector Tiles, use the `MGLVectorTileSource` class.
  
  You can add and remove sources dynamically using methods such as
  `-[MGLStyle addSource:]` and `-[MGLStyle sourceWithIdentifier:]`. This class

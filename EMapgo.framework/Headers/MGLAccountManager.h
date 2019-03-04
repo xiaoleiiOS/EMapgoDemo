@@ -18,11 +18,11 @@ MGL_EXPORT
  <a href="https://www.mapbox.com/help/define-access-token/">Mapbox access token</a>
  used by all instances of `MGLMapView` in the current application.
 
- Mapbox-hosted vector tiles and styles require an API access token, which you
+ EMapgo-hosted vector tiles and styles require an API access token, which you
  can obtain from the
  <a href="https://www.mapbox.com/studio/account/tokens/">Mapbox account page</a>.
  Access tokens associate requests to Mapbox’s vector tile and style APIs with
- your Mapbox account. They also deter other developers from using your styles
+ your EMapgo account. They also deter other developers from using your styles
  without your permission.
 
  Setting this property to a value of `nil` has no effect.

@@ -19,10 +19,13 @@ typedef NSString *MGLShapeSourceOption NS_STRING_ENUM;
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-cluster"><code>cluster</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  
  This option only affects point features within an `MGLShapeSource` object; it
  is ignored when creating an `MGLComputedShapeSource` object.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering/">Cluster point data</a> and <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">Use images to cluster point data</a> examples to learn how to cluster point data with this `MGLShapeSourceOption`.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionClustered;
 
@@ -44,7 +47,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionClus
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-clusterMaxZoom"><code>clusterMaxZoom</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  
  This option only affects point features within an `MGLShapeSource` object; it
  is ignored when creating an `MGLComputedShapeSource` object.
@@ -57,7 +60,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionMaxi
 
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-minzoom"><code>minzoom</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionMinimumZoomLevel;
 
@@ -68,7 +71,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionMini
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-maxzoom"><code>maxzoom</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionMaximumZoomLevel;
 
@@ -80,7 +83,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionMaxi
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-buffer"><code>buffer</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionBuffer;
 
@@ -91,7 +94,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionBuff
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-style-spec/#sources-geojson-tolerance"><code>tolerance</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionSimplificationTolerance;
 
@@ -103,7 +106,7 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionSimp
  
  This option corresponds to the
  <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#sources-geojson-lineMetrics"><code>lineMetrics</code></a>
- source property in the Mapbox Style Specification.
+ source property in the EMapgo Style Specification.
  */
 FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionLineDistanceMetrics;
 
@@ -142,6 +145,9 @@ FOUNDATION_EXTERN MGL_EXPORT const MGLShapeSourceOption MGLShapeSourceOptionLine
  let source = MGLShapeSource(identifier: "lines", features: [polyline], options: nil)
  mapView.style?.addSource(source)
  ```
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering/">Cluster point data</a>, <a href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">Use images to cluster point data</a>, and <a href="https://www.mapbox.com/ios-sdk/maps/examples/live-data/">Add live data</a> examples to learn how to add data to your map using this `MGLSource` object.
  */
 MGL_EXPORT
 @interface MGLShapeSource : MGLSource
@@ -165,6 +171,11 @@ MGL_EXPORT
     current application’s resource bundle.
  @param options An `NSDictionary` of options for this source.
  @return An initialized shape source.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/live-data/">
+ Add live data</a> example to learn how to add live data to your map by
+ updating the an `MGLShapeSource` object's `URL` property.
  */
 - (instancetype)initWithIdentifier:(NSString *)identifier URL:(NSURL *)url options:(nullable NSDictionary<MGLShapeSourceOption, id> *)options NS_DESIGNATED_INITIALIZER;
 
@@ -194,6 +205,11 @@ MGL_EXPORT
  @param shape A concrete subclass of `MGLShape`
  @param options An `NSDictionary` of options for this source.
  @return An initialized shape source.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/runtime-animate-line/">
+ Animate a line</a> example to learn how to animate line data by continously
+ updating an `MGLShapeSource`'s `shape` attribute.
  */
 - (instancetype)initWithIdentifier:(NSString *)identifier shape:(nullable MGLShape *)shape options:(nullable NSDictionary<MGLShapeSourceOption, id> *)options NS_DESIGNATED_INITIALIZER;
 

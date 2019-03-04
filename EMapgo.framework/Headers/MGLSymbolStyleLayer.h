@@ -151,6 +151,26 @@ typedef NS_ENUM(NSUInteger, MGLSymbolPlacement) {
 };
 
 /**
+ Controls the order in which overlapping symbols in the same layer are rendered
+
+ Values of this type are used in the `MGLSymbolStyleLayer.symbolZOrder`
+ property.
+ */
+typedef NS_ENUM(NSUInteger, MGLSymbolZOrder) {
+    /**
+     Specify this z order if symbols’ appearance relies on lower features
+     overlapping higher features. For example, symbols with a pin-like
+     appearance would require this z order.
+     */
+    MGLSymbolZOrderViewportY,
+    /**
+     Specify this z order if the order in which features appear in the source is
+     significant.
+     */
+    MGLSymbolZOrderSource,
+};
+
+/**
  Part of the text placed closest to the anchor.
 
  Values of this type are used in the `MGLSymbolStyleLayer.textAnchor`
@@ -336,6 +356,14 @@ typedef NS_ENUM(NSUInteger, MGLTextTranslationAnchor) {
  new symbol style layer and add it to the style using a method such as
  `-[MGLStyle addLayer:]`.
 
+ #### Related examples
+ See the <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/runtime-multiple-annotations/">Dynamically
+ style interactive points</a> and <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">Use
+ images to cluster point data</a> examples learn how to style data on your map
+ using this layer.
+
  ### Example
 
  ```swift
@@ -383,7 +411,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-allow-overlap"><code>icon-allow-overlap</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -447,7 +475,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-ignore-placement"><code>icon-ignore-placement</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -479,7 +507,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-image"><code>icon-image</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -489,6 +517,12 @@ MGL_EXPORT
  * Variable assignments and references to assigned variables
  * Interpolation and step functions applied to the `$zoomLevel` variable and/or
  feature attributes
+
+ #### Related examples
+ See the <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">Use
+ images to cluster point data</a> example to learn how to dynamically set your
+ icons with an expression.
  */
 @property (nonatomic, null_resettable) NSExpression *iconImageName;
 
@@ -628,7 +662,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-rotate"><code>icon-rotate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -692,7 +726,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-size"><code>icon-size</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -808,7 +842,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-icon-keep-upright"><code>icon-keep-upright</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -842,7 +876,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-keep-upright"><code>text-keep-upright</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -876,7 +910,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-max-angle"><code>text-max-angle</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -907,7 +941,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-max-width"><code>text-max-width</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -934,7 +968,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-symbol-avoid-edges"><code>symbol-avoid-edges</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1005,6 +1039,32 @@ MGL_EXPORT
 @property (nonatomic, null_resettable) NSExpression *symbolSpacing;
 
 /**
+ Controls the order in which overlapping symbols in the same layer are rendered
+ 
+ The default value of this property is an expression that evaluates to
+ `viewport-y`. Set this property to `nil` to reset it to the default value.
+ 
+ You can set this property to an expression containing any of the following:
+ 
+ * Constant `MGLSymbolZOrder` values
+ * Any of the following constant string values:
+   * `viewport-y`: Specify this z order if symbols’ appearance relies on lower
+ features overlapping higher features. For example, symbols with a pin-like
+ appearance would require this z order.
+   * `source`: Specify this z order if the order in which features appear in the
+ source is significant.
+ * Predefined functions, including mathematical and string operators
+ * Conditional expressions
+ * Variable assignments and references to assigned variables
+ * Step functions applied to the `$zoomLevel` variable
+ 
+ This property does not support applying interpolation functions to the
+ `$zoomLevel` variable or applying interpolation or step functions to feature
+ attributes.
+ */
+@property (nonatomic, null_resettable) NSExpression *symbolZOrder;
+
+/**
  Value to use for a text label.
  
  Within a constant string value, a feature attribute name enclosed in curly
@@ -1017,7 +1077,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-field"><code>text-field</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1027,6 +1087,14 @@ MGL_EXPORT
  * Variable assignments and references to assigned variables
  * Interpolation and step functions applied to the `$zoomLevel` variable and/or
  feature attributes
+
+ #### Related examples
+ See the <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/clustering/">Cluster point
+ data</a> and <a
+ href="https://www.mapbox.com/ios-sdk/maps/examples/clustering-with-images/">Use
+ images to cluster point data</a> to learn how to use an expression to set this
+ attribute to the number of markers within a cluster.
  */
 @property (nonatomic, null_resettable) NSExpression *text;
 
@@ -1045,7 +1113,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-allow-overlap"><code>text-allow-overlap</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1104,7 +1172,7 @@ MGL_EXPORT
  Each font name must be included in the `{fontstack}` portion of the JSON
  stylesheet’s <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#glyphs"><code>glyphs</code></a>
- property. You can register a custom font when designing the style in Mapbox
+ property. You can register a custom font when designing the style in EMapgo
  Studio. Fonts installed on the system are not used.
  
  The first font named in the array is applied to the text. For each character in
@@ -1120,7 +1188,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-font"><code>text-font</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1149,7 +1217,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-size"><code>text-size</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1176,7 +1244,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-ignore-placement"><code>text-ignore-placement</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1206,7 +1274,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-justify"><code>text-justify</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1409,7 +1477,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#layout-symbol-text-rotate"><code>text-rotate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1690,7 +1758,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-icon-translate"><code>icon-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1719,7 +1787,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-icon-translate"><code>icon-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1755,7 +1823,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-icon-translate-anchor"><code>icon-translate-anchor</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -1979,7 +2047,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-text-translate"><code>text-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -2008,7 +2076,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-text-translate"><code>text-translate</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -2044,7 +2112,7 @@ MGL_EXPORT
  
  This attribute corresponds to the <a
  href="https://www.mapbox.com/mapbox-gl-style-spec/#paint-text-translate-anchor"><code>text-translate-anchor</code></a>
- layout property in the Mapbox Style Specification.
+ layout property in the EMapgo Style Specification.
  
  You can set this property to an expression containing any of the following:
  
@@ -2139,6 +2207,19 @@ MGL_EXPORT
  The `MGLSymbolPlacement` enumeration representation of the value.
  */
 @property (readonly) MGLSymbolPlacement MGLSymbolPlacementValue;
+
+/**
+ Creates a new value object containing the given `MGLSymbolZOrder` enumeration.
+
+ @param symbolZOrder The value for the new object.
+ @return A new value object that contains the enumeration value.
+ */
++ (instancetype)valueWithMGLSymbolZOrder:(MGLSymbolZOrder)symbolZOrder;
+
+/**
+ The `MGLSymbolZOrder` enumeration representation of the value.
+ */
+@property (readonly) MGLSymbolZOrder MGLSymbolZOrderValue;
 
 /**
  Creates a new value object containing the given `MGLTextAnchor` enumeration.

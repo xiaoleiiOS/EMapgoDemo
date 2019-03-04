@@ -15,7 +15,7 @@ MGL_EXPORT
  Creates a set of options with the minimum required information.
  
  @param styleURL URL of the map style to snapshot. The URL may be a full HTTP or
-    HTTPS URL, a Mapbox URL indicating the style’s map ID
+    HTTPS URL, a EMapgo URL indicating the style’s map ID
     (`mapbox://styles/{user}/{style}`), or a path to a local file relative to
     the application’s resource path. Specify `nil` for the default style.
  @param size The image size.
@@ -149,7 +149,7 @@ typedef void (^MGLMapSnapshotCompletionHandler)(MGLMapSnapshot* _Nullable snapsh
  ### Example
  
  ```swift
- let camera = MGLMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: 37.7184, longitude: -122.4365), fromDistance: 100, pitch: 20, heading: 0)
+ let camera = MGLMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: 37.7184, longitude: -122.4365), altitude: 100, pitch: 20, heading: 0)
  
  let options = MGLMapSnapshotOptions(styleURL: MGLStyle.satelliteStreetsStyleURL, camera: camera, size: CGSize(width: 320, height: 480))
  options.zoomLevel = 10
@@ -163,6 +163,12 @@ typedef void (^MGLMapSnapshotCompletionHandler)(MGLMapSnapshot* _Nullable snapsh
      image = snapshot?.image
  }
  ```
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/map-snapshotter/">
+ Create a static map snapshot</a> example to learn how to use the
+ `MGLMapSnapshotter` to generate a static image based on an `MGLMapView`
+ object's style, camera, and view bounds.
  */
 MGL_EXPORT
 @interface MGLMapSnapshotter : NSObject

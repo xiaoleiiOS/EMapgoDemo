@@ -51,6 +51,9 @@ typedef NS_ENUM(NSUInteger, MGLAnnotationVerticalAlignment) {
 /**
  The mode used to track the user location on the map. Used with
  `MGLMapView.userTrackingMode`.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/user-tracking-mode/">Switch between user tracking modes</a> example to learn how to toggle modes and how each mode behaves.
  */
 typedef NS_ENUM(NSUInteger, MGLUserTrackingMode) {
     /** The map does not follow the user location. */
@@ -110,11 +113,11 @@ FOUNDATION_EXTERN MGL_EXPORT MGLExceptionName const MGLResourceNotFoundException
  viewpoints, and present information in the form of annotations and overlays.
 
  The map view loads scalable vector tiles that conform to the
- <a href="https://github.com/mapbox/vector-tile-spec">Mapbox Vector Tile Specification</a>.
+ <a href="https://github.com/mapbox/vector-tile-spec">EMapgo Vector Tile Specification</a>.
  It styles them with a style that conforms to the
- <a href="https://www.mapbox.com/mapbox-gl-style-spec/">Mapbox Style Specification</a>.
+ <a href="https://www.mapbox.com/mapbox-gl-style-spec/">EMapgo Style Specification</a>.
  Such styles can be designed in
- <a href="https://www.mapbox.com/studio/">Mapbox Studio</a> and hosted on
+ <a href="https://www.mapbox.com/studio/">EMapgo Studio</a> and hosted on
  mapbox.com.
 
  A collection of Mapbox-hosted styles is available through the `MGLStyle`
@@ -129,6 +132,11 @@ FOUNDATION_EXTERN MGL_EXPORT MGLExceptionName const MGLResourceNotFoundException
  Access tokens associate requests to Mapbox’s vector tile and style APIs with
  your Mapbox account. They also deter other developers from using your styles
  without your permission.
+ 
+ Because `MGLMapView` loads asynchronously, several delegate methods are available 
+ for receiving map-related updates. These methods can be used to ensure that certain operations
+ have completed before taking any additional actions. Information on these methods is located
+ in the `MGLMapViewDelegate` protocol documentation.
 
  Adding your own gesture recognizer to `MGLMapView` will block the corresponding
  gesture recognizer built into `MGLMapView`. To avoid conflicts, define which
@@ -146,12 +154,24 @@ FOUNDATION_EXTERN MGL_EXPORT MGLExceptionName const MGLResourceNotFoundException
 
  @note You are responsible for getting permission to use the map data and for
  ensuring that your use adheres to the relevant terms of use.
-
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/simple-map-view/">
+ Simple map view</a> example to learn how to initialize a basic `MGLMapView`.
  */
 MGL_EXPORT IB_DESIGNABLE
 @interface MGLMapView : UIView
 
 #pragma mark Creating Instances
+
+#pragma mark - 添加单例方法，开始。。。
+/**
+ map view的单例
+ 
+ @return An initialized map view.
+ */
++ (MGLMapView *)instance;
+#pragma mark - 添加单例方法，结束。。。
 
 /**
  Initializes and returns a newly allocated map view with the specified frame
@@ -172,6 +192,16 @@ MGL_EXPORT IB_DESIGNABLE
     (`mapbox://styles/{user}/{style}`), or a path to a local file relative
     to the application’s resource path. Specify `nil` for the default style.
  @return An initialized map view.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/custom-style/">
+ Apply a style designed in Mapbox Studio</a> example to learn how to
+ initialize an `MGLMapView` with a custom style. See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/raster-styles/">
+ Appy a style designed in Mapbox Studio Classic</a> example to learn how to
+ intialize an `MGLMapView` with a Studio Classic style _or_ a custom style
+ JSON. See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/source-custom-vector/">
+ Use third-party vector tiles</a> example to learn how to initialize an
+ `MGLMapView` with a third-party tile source.
  */
 - (instancetype)initWithFrame:(CGRect)frame styleURL:(nullable NSURL *)styleURL;
 
@@ -225,6 +255,11 @@ MGL_EXPORT IB_DESIGNABLE
 
  If you want to modify the current style without replacing it outright, or if
  you want to introspect individual style attributes, use the `style` property.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/switch-styles/">
+ Switch between map styles</a> example to learn how to change the style of
+ a map at runtime.
  */
 @property (nonatomic, null_resettable) NSURL *styleURL;
 
@@ -264,21 +299,6 @@ MGL_EXPORT IB_DESIGNABLE
 @property (nonatomic, readonly) UIImageView *compassView;
 
 /**
- 以下为调整地图上控件位置的属性，到地图边界的距离，配置为正值，不能为负，默认为0
- */
-@property (nonatomic, assign) NSInteger scaleTop;
-
-@property (nonatomic, assign) NSInteger commpassTop;
-
-@property (nonatomic, assign) NSInteger logoBottom;
-
-@property (nonatomic, assign) NSInteger logoRight;
-
-@property (nonatomic, assign) NSInteger drawingNoBottom;
-
-@property (nonatomic, assign) NSInteger drawingNoLeft;
-
-/**
  The Mapbox logo, positioned in the lower-left corner.
 
  @note The Mapbox terms of service, which governs the use of Mapbox-hosted
@@ -288,6 +308,39 @@ MGL_EXPORT IB_DESIGNABLE
     hide this view or change its contents.
  */
 @property (nonatomic, readonly) UIImageView *logoView;
+
+#pragma mark - 修改控件位置，和添加审图号字体设置，开始。。。
+
+/**
+ 以下为调整地图上控件位置的属性，到地图边界的距离，配置为正值，不能为负，默认为0
+ */
+@property (nonatomic, assign) CGFloat scaleTop;
+
+@property (nonatomic, assign) CGFloat commpassTop;
+
+@property (nonatomic, assign) CGFloat logoBottom;
+
+@property (nonatomic, assign) CGFloat logoRight;
+
+@property (nonatomic, assign) CGFloat drawingNoBottom;
+
+@property (nonatomic, assign) CGFloat drawingNoLeft;
+
+/**
+ 设置左下角审图号的字体颜色，若不设置，显示默认字体颜色。
+ 
+ @param titleColor 字体颜色
+ */
+- (void)setDrawingNoWithTitleColor:(UIColor *)titleColor;
+
+/**
+ 设置左下角审图号的字体，若不设置，默认为系统字体，字体大小为12。
+ 
+ @param titleFont 字体
+ */
+- (void)setDrawingNoWithTitleFont:(UIFont *)titleFont;
+#pragma mark - 修改控件位置，和添加审图号字体设置，结束。。。
+
 
 /**
  A view showing legally required copyright notices and telemetry settings,
@@ -314,8 +367,6 @@ MGL_EXPORT IB_DESIGNABLE
  */
 @property (nonatomic, readonly) UIButton *attributionButton;
 
-
-@property (nonatomic, readonly) UILabel *emapgoTitleLabel;
 /**
  Show the attribution and telemetry action sheet.
 
@@ -410,6 +461,11 @@ MGL_EXPORT IB_DESIGNABLE
  Changing the value of this property updates the map view with an animated
  transition. If you don’t want to animate the change, use the
  `-setUserTrackingMode:animated:` method instead.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/user-location-annotation/">
+ Customize the user location annotation</a> to learn how to customize the
+ default user location annotation shown by `MGLUserTrackingMode`.
  */
 @property (nonatomic, assign) MGLUserTrackingMode userTrackingMode;
 
@@ -433,7 +489,7 @@ MGL_EXPORT IB_DESIGNABLE
  transition. If you don’t want to animate the change, use the
  `-setUserLocationVerticalAlignment:animated:` method instead.
  */
-@property (nonatomic, assign) MGLAnnotationVerticalAlignment userLocationVerticalAlignment;
+@property (nonatomic, assign) MGLAnnotationVerticalAlignment userLocationVerticalAlignment __attribute__((deprecated("Use -[MGLMapViewDelegate mapViewUserLocationAnchorPoint:] instead.")));
 
 /**
  Sets the vertical alignment of the user location annotation within the
@@ -444,7 +500,20 @@ MGL_EXPORT IB_DESIGNABLE
     position within the map view. If `NO`, the user location annotation
     instantaneously moves to its new position.
  */
-- (void)setUserLocationVerticalAlignment:(MGLAnnotationVerticalAlignment)alignment animated:(BOOL)animated;
+- (void)setUserLocationVerticalAlignment:(MGLAnnotationVerticalAlignment)alignment animated:(BOOL)animated __attribute__((deprecated("Use -[MGLMapViewDelegate mapViewUserLocationAnchorPoint:] instead.")));
+
+/**
+ Updates the position of the user location annotation view by retreiving the user's last
+ known location.
+ */
+- (void)updateUserLocationAnnotationView;
+
+/**
+ Updates the position of the user location annotation view by retreiving the user's last
+ known location with a specified duration.
+ @param duration The duration to animate the change in seconds.
+*/
+- (void)updateUserLocationAnnotationViewAnimatedWithDuration:(NSTimeInterval)duration;
 
 /**
  A Boolean value indicating whether the user location annotation may display a
@@ -877,6 +946,11 @@ MGL_EXPORT IB_DESIGNABLE
  @param animated Specify `YES` if you want the map view to animate the change to
     the new viewpoint or `NO` if you want the map to display the new viewpoint
     immediately.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/camera-animation/">
+ Camera animation</a> example to learn how to trigger an animation that
+ rotates around a central point.
  */
 - (void)setCamera:(MGLMapCamera *)camera animated:(BOOL)animated;
 
@@ -891,6 +965,11 @@ MGL_EXPORT IB_DESIGNABLE
  @param function A timing function used for the animation. Set this parameter to
     `nil` for a transition that matches most system animations. If the duration
     is `0`, this parameter is ignored.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/camera-animation/">
+ Camera animation</a> example to learn how to create a timed animation that
+ rotates around a central point for a specific duration.
  */
 - (void)setCamera:(MGLMapCamera *)camera withDuration:(NSTimeInterval)duration animationTimingFunction:(nullable CAMediaTimingFunction *)function;
 
@@ -1114,6 +1193,11 @@ MGL_EXPORT IB_DESIGNABLE
  @param point The point to convert.
  @param view The view in whose coordinate system the point is expressed.
  @return The geographic coordinate at the given point.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/point-conversion/">
+ Point conversion</a> example to learn how to convert a `CGPoint` to a map
+ coordinate.
  */
 - (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(nullable UIView *)view;
 
@@ -1128,6 +1212,11 @@ MGL_EXPORT IB_DESIGNABLE
     belong to the same window as the map view.
  @return The point (in the appropriate view or window coordinate system)
     corresponding to the given geographic coordinate.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/point-conversion/">
+ Point conversion</a> example to learn how to convert a map coordinate to a
+ `CGPoint` object.
  */
 - (CGPoint)convertCoordinate:(CLLocationCoordinate2D)coordinate toPointToView:(nullable UIView *)view;
 
@@ -1135,8 +1224,9 @@ MGL_EXPORT IB_DESIGNABLE
  Converts a rectangle in the given view’s coordinate system to a geographic
  bounding box.
  
- If a longitude is less than −180 degrees or greater than 180 degrees, the
- bounding box straddles the antimeridian or international date line.
+ If the returned coordinate bounds contains a longitude is less than −180 degrees
+ or greater than 180 degrees, the bounding box straddles the antimeridian or
+ international date line.
 
  @param rect The rectangle to convert.
  @param view The view in whose coordinate system the rectangle is expressed.
@@ -1147,6 +1237,11 @@ MGL_EXPORT IB_DESIGNABLE
 /**
  Converts a geographic bounding box to a rectangle in the given view’s
  coordinate system.
+ 
+ To bring both sides of the antimeridian or international date line into view,
+ specify some longitudes less than −180 degrees or greater than 180 degrees. For
+ example, to show both Tokyo and San Francisco simultaneously, you could set the
+ visible bounds to extend from (35.68476, −220.24257) to (37.78428, −122.41310).
 
  @param bounds The geographic bounding box to convert.
  @param view The view in whose coordinate system the returned rectangle should
@@ -1193,7 +1288,14 @@ MGL_EXPORT IB_DESIGNABLE
 
  @param annotation The annotation object to add to the receiver. This object
     must conform to the `MGLAnnotation` protocol. The map view retains the
-    annotation object. */
+    annotation object.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/annotation-models/">
+ Annotation models</a> and <a href="https://www.mapbox.com/ios-sdk/maps/examples/line-geojson/">
+ Add a line annotation from GeoJSON</a> examples to learn how to add an
+ annotation to an `MGLMapView` object.
+ */
 - (void)addAnnotation:(id <MGLAnnotation>)annotation;
 
 /**
@@ -1258,6 +1360,11 @@ MGL_EXPORT IB_DESIGNABLE
     annotation image object using the `-mapView:imageForAnnotation:` method.
  @return An annotation image object with the given identifier, or `nil` if no
     such object exists in the reuse queue.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/annotation-view-image/">
+ Add annotation views and images</a> example learn how to most efficiently
+ reuse an `MGLAnnotationImage`.
  */
 - (nullable __kindof MGLAnnotationImage *)dequeueReusableAnnotationImageWithIdentifier:(NSString *)identifier;
 
@@ -1342,6 +1449,29 @@ MGL_EXPORT IB_DESIGNABLE
  */
 - (void)deselectAnnotation:(nullable id <MGLAnnotation>)annotation animated:(BOOL)animated;
 
+#pragma mark - 新增路线规划，箭头风格，开始。。。
+
+/**
+ 路线规划，添加一个带箭头风格的路线。
+ 
+ @param identifier 标记
+ @param shape 线路
+ @param lineWidth 线宽
+ @param lineColor 线颜色
+ @param borderColor 线边缘颜色
+ */
+- (void)addRoutePlanningArrowStyleWithIdentifier:(NSString *)identifier shape:(nullable MGLShape *)shape lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor borderColor:(UIColor *)borderColor;
+
+/**
+ 路线规划，根据标记，移除带箭头风格的线路。
+ 
+ @param identifier 标记
+ */
+- (void)removeRoutePlanningArrowStyleWithIdentifier:(NSString *)identifier;
+
+#pragma mark - 新增路线规划，箭头风格，结束。。。
+
+
 #pragma mark Overlaying the Map
 
 /**
@@ -1405,6 +1535,11 @@ MGL_EXPORT IB_DESIGNABLE
  @param point A point expressed in the map view’s coordinate system.
  @return An array of objects conforming to the `MGLFeature` protocol that
     represent features in the sources used by the current style.
+ 
+ #### Related examples
+ See the <a href="https://www.mapbox.com/ios-sdk/maps/examples/select-layer/">
+ Select a feature within a layer</a> example to learn how to query an
+ `MGLMapView` object for visible `MGLFeature` objects.
  */
 - (NSArray<id <MGLFeature>> *)visibleFeaturesAtPoint:(CGPoint)point NS_SWIFT_NAME(visibleFeatures(at:));
 
@@ -1615,6 +1750,18 @@ MGL_EXPORT IB_DESIGNABLE
 - (void)toggleDebug __attribute__((unavailable("Use -setDebugMask:.")));
 
 - (void)emptyMemoryCache __attribute__((unavailable));
+
+@end
+
+
+@interface MGLMapView (EagleEye)
+
+@property (nonatomic) CGPoint eagleEyeOrigin;
+
+- (void)openEagleEye;
+
+- (void)closeEagleEye;
+
 
 @end
 
