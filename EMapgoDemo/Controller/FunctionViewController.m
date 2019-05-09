@@ -20,14 +20,18 @@
 @implementation FunctionViewController
 - (UITableView *)tableView{
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, DEF_SCREEN_WIDTH, SafeAreaScrollHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, SafeAreaTopHeight, DEF_SCREEN_WIDTH, SafeAreaScrollHeight) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
-        _tableView.rowHeight = 44;
+        //        _tableView.rowHeight = 44;
+        //给tablView添加着两句配合好约束就再也不用计算高度了
+        _tableView.estimatedRowHeight = 44;
+        _tableView.rowHeight = UITableViewAutomaticDimension;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _tableView.tableFooterView = [UIView new];
     }
     return _tableView;
 }
@@ -44,7 +48,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _nameArray = @[@"加载大头针和默认气泡",@"绘制多边形",@"绘制线段",@"绘制路线",@"绘制圆点标记",@"添加经纬度网格",@"RasterTileSource添加WMS资源",@"styleRasterTileSource",@"styleImageSource",@"Style Building Fill Color",@"Remove Parks",@"Overdraw Visualization",@"3D Map",@"添加3D建筑layer"];
+    _nameArray = @[@"加载大头针和默认气泡",@"绘制多边形",@"绘制线段",@"绘制路线",@"绘制圆点标记",@"添加经纬度网格",@"RasterTileSource添加WMS资源",@"styleRasterTileSource",@"styleImageSource",@"Style Building Fill Color",@"Remove Parks",@"Overdraw Visualization",@"3D Map",@"添加3D建筑layer", @"注释视图动画", @"添加交通事件和交通路况光栅瓦片"];
     _imageNameArray = @[@"one",@"two",@"three",@"four",@"five",@"six",@"seven",@"eight",@"nine",@"ten",@"eleven",@"twelve",@"thirteen",@"fourteen"];
     
     [self makeUI];
@@ -74,15 +78,15 @@
     if (cell == nil) {
         cell = [[FouctionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    cell.introduceImageView.image = [UIImage imageNamed:_imageNameArray[indexPath.row]];
+    //    cell.introduceImageView.image = [UIImage imageNamed:_imageNameArray[indexPath.row]];
     cell.nameLabel.text = _nameArray[indexPath.row];
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 265*DEF_WIDTH_RATIO+40;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return 265*DEF_WIDTH_RATIO+40;
+//}
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -92,19 +96,12 @@
     }
 }
 
+#pragma mark - 点击事件
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

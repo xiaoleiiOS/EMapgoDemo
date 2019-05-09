@@ -216,9 +216,12 @@ typedef SWIFT_ENUM_NAMED(NSInteger, MBCongestionLevel, "CongestionLevel", closed
 SWIFT_CLASS_NAMED("CoordinateBounds")
 @interface MBCoordinateBounds : NSObject
 /// Initializes a <code>BoundingBox</code> with known bounds.
+- (nonnull instancetype)initWithSouthWest:(CLLocationCoordinate2D)southWest northEast:(CLLocationCoordinate2D)northEast OBJC_DESIGNATED_INITIALIZER;
+/// Initializes a <code>BoundingBox</code> with known bounds.
 - (nonnull instancetype)initWithNorthWest:(CLLocationCoordinate2D)northWest southEast:(CLLocationCoordinate2D)southEast OBJC_DESIGNATED_INITIALIZER;
 /// Initializes a <code>BoundingBox</code> from an array of <code>CLLocationCoordinate2D</code>’s.
 - (nonnull instancetype)initWithCoordinates:(NSArray<NSValue *> * _Nonnull)coordinates;
+@property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
 @end
@@ -232,12 +235,12 @@ SWIFT_CLASS_NAMED("CoordinateBounds")
 @class MBMatch;
 @class MBDirectionsOptions;
 
-/// A <code>Directions</code> object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to the <a href="https://www.mapbox.com/api-documentation/?language=Swift#directions">Mapbox Directions API</a> and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A <code>RouteOptions</code> object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned.
+/// A <code>Directions</code> object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to the <a href="https://docs.mapbox.com/api/navigation/#directions">Mapbox Directions API</a> and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A <code>RouteOptions</code> object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned.
 /// Each result produced by the directions object is stored in a <code>Route</code> object. Depending on the <code>RouteOptions</code> object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
 SWIFT_CLASS_NAMED("Directions")
 @interface MBDirections : NSObject
 /// The shared directions object.
-/// To use this object, a Mapbox <a href="https://www.mapbox.com/help/define-access-token/">access token</a> should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
+/// To use this object, a Mapbox <a href="https://docs.mapbox.com/help/glossary/access-token/">access token</a> should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MBDirections * _Nonnull sharedDirections;)
 + (MBDirections * _Nonnull)sharedDirections SWIFT_WARN_UNUSED_RESULT;
 /// The API endpoint to use when requesting directions.
@@ -245,19 +248,19 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MBDirections
 /// The Mapbox access token to associate with the request.
 @property (nonatomic, readonly, copy) NSString * _Nonnull accessToken;
 /// Initializes a newly created directions object with an optional access token and host.
-/// \param accessToken A Mapbox <a href="https://www.mapbox.com/help/define-access-token/">access token</a>. If an access token is not specified when initializing the directions object, it should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
+/// \param accessToken A Mapbox <a href="https://docs.mapbox.com/help/glossary/access-token/">access token</a>. If an access token is not specified when initializing the directions object, it should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
 ///
-/// \param host An optional hostname to the server API. The <a href="https://www.mapbox.com/api-documentation/?language=Swift#directions">Mapbox Directions API</a> endpoint is used by default.
+/// \param host An optional hostname to the server API. The <a href="https://docs.mapbox.com/api/navigation/#directions">Mapbox Directions API</a> endpoint is used by default.
 ///
 - (nonnull instancetype)initWithAccessToken:(NSString * _Nullable)accessToken host:(NSString * _Nullable)host OBJC_DESIGNATED_INITIALIZER;
 /// Initializes a newly created directions object with an optional access token.
-/// The directions object sends requests to the <a href="https://www.mapbox.com/api-documentation/?language=Swift#directions">Mapbox Directions API</a> endpoint.
-/// \param accessToken A Mapbox <a href="https://www.mapbox.com/help/define-access-token/">access token</a>. If an access token is not specified when initializing the directions object, it should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
+/// The directions object sends requests to the <a href="https://docs.mapbox.com/api/navigation/#directions">Mapbox Directions API</a> endpoint.
+/// \param accessToken A Mapbox <a href="https://docs.mapbox.com/help/glossary/access-token/">access token</a>. If an access token is not specified when initializing the directions object, it should be specified in the <code>MGLMapboxAccessToken</code> key in the main application bundle’s Info.plist.
 ///
 - (nonnull instancetype)initWithAccessToken:(NSString * _Nullable)accessToken;
-/// Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
-/// This method retrieves the routes asynchronously over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
-/// Routes may be displayed atop a <a href="https://www.mapbox.com/maps/">Mapbox map</a>. They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, <a href="https://www.mapbox.com/directions/#pricing">upgrade to a Mapbox enterprise plan</a>.
+/// Begins asynchronously calculating routes using the given options and delivers the results to a closure.
+/// This method retrieves the routes asynchronously from the <a href="https://www.mapbox.com/api-documentation/navigation/#directions">Mapbox Directions API</a> over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
+/// Routes may be displayed atop a <a href="https://www.mapbox.com/maps/">Mapbox map</a>. They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, <a href="https://www.mapbox.com/navigation/#pricing">upgrade to a Mapbox enterprise plan</a>.
 /// \param options A <code>RouteOptions</code> object specifying the requirements for the resulting routes.
 ///
 /// \param completionHandler The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
@@ -266,7 +269,20 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MBDirections
 /// returns:
 /// The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
 - (NSURLSessionDataTask * _Nonnull)calculateDirectionsWithOptions:(MBRouteOptions * _Nonnull)options completionHandler:(void (^ _Nonnull)(NSArray<MBWaypoint *> * _Nullable, NSArray<MBRoute *> * _Nullable, NSError * _Nullable))completionHandler;
-/// Begins asynchronously calculating a match using the given options and delivers the results to a closure.
+/// Begins asynchronously calculating matches using the given options and delivers the results to a closure.
+/// This method retrieves the matches asynchronously from the <a href="https://docs.mapbox.com/api/navigation/#map-matching">Mapbox Map Matching API</a> over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
+/// To get <code>Route</code>s based on these matches, use the <code>calculateRoutes(matching:completionHandler:)</code> method instead.
+/// \param options A <code>MatchOptions</code> object specifying the requirements for the resulting matches.
+///
+/// \param completionHandler The closure (block) to call with the resulting matches. This closure is executed on the application’s main thread.
+///
+///
+/// returns:
+/// The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting matches, cancel this task.
+- (NSURLSessionDataTask * _Nonnull)calculateMatchesWithOptions:(MBMatchOptions * _Nonnull)options completionHandler:(void (^ _Nonnull)(NSArray<MBMatch *> * _Nullable, NSError * _Nullable))completionHandler;
+/// Begins asynchronously calculating routes that match the given options and delivers the results to a closure.
+/// This method retrieves the routes asynchronously from the <a href="https://docs.mapbox.com/api/navigation/#map-matching">Mapbox Map Matching API</a> over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
+/// To get the <code>Match</code>es that these routes are based on, use the <code>calculate(_:completionHandler:)</code> method instead.
 /// \param options A <code>MatchOptions</code> object specifying the requirements for the resulting match.
 ///
 /// \param completionHandler The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
@@ -274,11 +290,35 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) MBDirections
 ///
 /// returns:
 /// The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
-- (NSURLSessionDataTask * _Nonnull)calculateMatchesWithOptions:(MBMatchOptions * _Nonnull)options completionHandler:(void (^ _Nonnull)(NSArray<MBMatch *> * _Nullable, NSError * _Nullable))completionHandler;
 - (NSURLSessionDataTask * _Nonnull)calculateRoutesMatchingOptions:(MBMatchOptions * _Nonnull)options completionHandler:(void (^ _Nonnull)(NSArray<MBWaypoint *> * _Nullable, NSArray<MBRoute *> * _Nullable, NSError * _Nullable))completionHandler;
-/// The HTTP URL used to fetch the routes from the API.
-/// After requesting the URL returned by this method, you can parse the JSON data in the response and pass it into the <code>Route.init(json:waypoints:profileIdentifier:)</code> initializer.
+/// The GET HTTP URL used to fetch the routes from the API.
+/// After requesting the URL returned by this method, you can parse the JSON data in the response and pass it into the <code>Route.init(json:waypoints:profileIdentifier:)</code> initializer. Alternatively, you can use the <code>calculate(_:options:)</code> method, which automatically sends the request and parses the response.
+/// \param options A <code>DirectionsOptions</code> object specifying the requirements for the resulting routes.
+///
+///
+/// returns:
+/// The URL to send the request to.
 - (NSURL * _Nonnull)URLForCalculatingDirectionsWithOptions:(MBDirectionsOptions * _Nonnull)options SWIFT_WARN_UNUSED_RESULT;
+/// The HTTP URL used to fetch the routes from the API using the specified HTTP method.
+/// The query part of the URL is generally suitable for GET requests. However, if the URL is exceptionally long, it may be more appropriate to send a POST request to a URL without the query part, relegating the query to the body of the HTTP request. Use the <code>urlRequest(forCalculating:)</code> method to get an HTTP request that is a GET or POST request as necessary.
+/// After requesting the URL returned by this method, you can parse the JSON data in the response and pass it into the <code>Route.init(json:waypoints:profileIdentifier:)</code> initializer. Alternatively, you can use the <code>calculate(_:options:)</code> method, which automatically sends the request and parses the response.
+/// \param options A <code>DirectionsOptions</code> object specifying the requirements for the resulting routes.
+///
+/// \param httpMethod The HTTP method to use. The value of this argument should match the <code>URLRequest.httpMethod</code> of the request you send. Currently, only GET and POST requests are supported by the API.
+///
+///
+/// returns:
+/// The URL to send the request to.
+- (NSURL * _Nonnull)URLForCalculatingDirectionsWithOptions:(MBDirectionsOptions * _Nonnull)options HTTPMethod:(NSString * _Nonnull)httpMethod SWIFT_WARN_UNUSED_RESULT;
+/// The HTTP request used to fetch the routes from the API.
+/// The returned request is a GET or POST request as necessary to accommodate URL length limits.
+/// After sending the request returned by this method, you can parse the JSON data in the response and pass it into the <code>Route.init(json:waypoints:profileIdentifier:)</code> initializer. Alternatively, you can use the <code>calculate(_:options:)</code> method, which automatically sends the request and parses the response.
+/// \param options A <code>DirectionsOptions</code> object specifying the requirements for the resulting routes.
+///
+///
+/// returns:
+/// A GET or POST HTTP request to calculate the specified options.
+- (NSURLRequest * _Nonnull)URLRequestForCalculatingDirectionsWithOptions:(MBDirectionsOptions * _Nonnull)options SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
 @end
@@ -303,7 +343,7 @@ SWIFT_PROTOCOL_NAMED("OfflineDirectionsProtocol")
 
 
 @interface MBDirections (SWIFT_EXTENSION(MapboxDirections)) <MBOfflineDirectionsProtocol>
-/// Fetch the available versions. A version is represented as a String (yyyy-MM-dd or yyyy-MM-dd-x).
+/// Fetch the available versions in descending chronological order. A version is represented as a String (yyyy-MM-dd or yyyy-MM-dd-x).
 /// \param completionHandler The closure to call with the results
 ///
 ///
@@ -336,7 +376,7 @@ SWIFT_CLASS_NAMED("DirectionsOptions")
 @interface MBDirectionsOptions : NSObject <NSCopying, NSSecureCoding>
 /// Initializes an options object for routes between the given waypoints and an optional profile identifier.
 /// Do not call <code>DirectionsOptions(waypoints:profileIdentifier:)</code> directly; instead call the corresponding initializer of <code>RouteOptions</code> or <code>MatchOptions</code>.
-/// \param waypoints An array of <code>Waypoint</code> objects representing locations that the route should visit in chronological order. The array should contain at least two waypoints (the source and destination) and at most 25 waypoints. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://www.mapbox.com/api-documentation/#directions">may have lower limits</a>.)
+/// \param waypoints An array of <code>Waypoint</code> objects representing locations that the route should visit in chronological order. The array should contain at least two waypoints (the source and destination) and at most 25 waypoints. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://docs.mapbox.com/api/navigation/#directions">may have lower limits</a>.)
 ///
 /// \param profileIdentifier A string specifying the primary mode of transportation for the routes. This parameter, if set, should be set to <code>MBDirectionsProfileIdentifierAutomobile</code>, <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <code>MBDirectionsProfileIdentifierCycling</code>, or <code>MBDirectionsProfileIdentifierWalking</code>. <code>MBDirectionsProfileIdentifierAutomobile</code> is used by default.
 ///
@@ -373,7 +413,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 @property (nonatomic) MBAttributeOptions attributeOptions;
 /// The locale in which the route’s instructions are written.
 /// If you use MapboxDirections.swift with the Mapbox Directions API or Map Matching API, this property affects the sentence contained within the <code>RouteStep.instructions</code> property, but it does not affect any road names contained in that property or other properties such as <code>RouteStep.name</code>.
-/// The Directions API can provide instructions in <a href="https://www.mapbox.com/api-documentation/#instructions-languages">a number of languages</a>. Set this property to <code>Bundle.main.preferredLocalizations.first</code> or <code>Locale.autoupdatingCurrent</code> to match the application’s language or the system language, respectively.
+/// The Directions API can provide instructions in <a href="https://docs.mapbox.com/api/navigation/#instructions-languages">a number of languages</a>. Set this property to <code>Bundle.main.preferredLocalizations.first</code> or <code>Locale.autoupdatingCurrent</code> to match the application’s language or the system language, respectively.
 /// By default, this property is set to the current system locale.
 @property (nonatomic, copy) NSLocale * _Nonnull locale;
 /// A Boolean value indicating whether each route step includes an array of <code>SpokenInstructions</code>.
@@ -386,6 +426,9 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 /// If true, each <code>RouteStep</code> will contain the property <code>visualInstructionsAlongStep</code>.
 /// <code>visualInstructionsAlongStep</code> contains an array of <code>VisualInstruction</code> objects used for visually conveying information about a given <code>RouteStep</code>.
 @property (nonatomic) BOOL includesVisualInstructions;
+/// An array of URL query items to include in an HTTP request.
+/// The query items are included in the URL of a GET request or the body of a POST request.
+@property (nonatomic, readonly, copy) NSArray<NSURLQueryItem *> * _Nonnull URLQueryItems;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
 @end
@@ -402,7 +445,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 - (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 /// An array of geographic coordinates defining the path of the route from start to finish.
 /// This array may be <code>nil</code> or simplified depending on the <code>routeShapeResolution</code> property of the original <code>RouteOptions</code> object.
-/// Using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display an overview of the route on an <code>MGLMapView</code>.
+/// Using the <a href="https://docs.mapbox.com/ios/maps/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display an overview of the route on an <code>MGLMapView</code>.
 @property (nonatomic, readonly, copy) NSArray<NSValue *> * _Nullable coordinates;
 /// The number of coordinates.
 /// The value of this property may be zero or reduced depending on the <code>routeShapeResolution</code> property of the original <code>RouteOptions</code> object.
@@ -411,7 +454,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 @property (nonatomic, readonly) NSUInteger coordinateCount;
 /// Retrieves the coordinates.
 /// The array may be empty or simplified depending on the <code>routeShapeResolution</code> property of the original <code>RouteOptions</code> object.
-/// Using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display an overview of the route on an <code>MGLMapView</code>.
+/// Using the <a href="https://docs.mapbox.com/ios/maps/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display an overview of the route on an <code>MGLMapView</code>.
 /// precondition:
 /// <code>coordinates</code> must be large enough to hold <code>coordinateCount</code> instances of <code>CLLocationCoordinate2D</code>.
 /// note:
@@ -434,7 +477,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 /// <code>RouteOptions</code> used to create the directions request.
 /// The route options object’s profileIdentifier property reflects the primary mode of transportation used for the route. Individual steps along the route might use different modes of transportation as necessary.
 @property (nonatomic, readonly, strong) MBDirectionsOptions * _Nonnull directionsOptions;
-/// The <a href="https://www.mapbox.com/help/define-access-token/">access token</a> used to make the directions request.
+/// The <a href="https://docs.mapbox.com/help/glossary/access-token/">access token</a> used to make the directions request.
 /// This property is set automatically if a request is made via <code>Directions.calculate(_:completionHandler:)</code>.
 @property (nonatomic, copy) NSString * _Nullable accessToken;
 /// The endpoint used to make the directions request.
@@ -446,6 +489,14 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 /// The locale to use for spoken instructions.
 /// This locale is specific to Mapbox Voice API. If <code>nil</code> is returned, the instruction should be spoken with an alternative speech synthesizer.
 @property (nonatomic, copy) NSLocale * _Nullable speechLocale;
+/// The time immediately before a <code>Directions</code> object fetched this result.
+/// If you manually start fetching a task returned by <code>Directions.url(forCalculating:)</code>, this property is set to <code>nil</code>; use the <code>URLSessionTaskTransactionMetrics.fetchStartDate</code> property instead. This property may also be set to <code>nil</code> if you create this result from a JSON object or encoded object.
+/// This property does not persist after encoding and decoding.
+@property (nonatomic, copy) NSDate * _Nullable fetchStartDate;
+/// The time immediately before a <code>Directions</code> object received the last byte of this result.
+/// If you manually start fetching a task returned by <code>Directions.url(forCalculating:)</code>, this property is set to <code>nil</code>; use the <code>URLSessionTaskTransactionMetrics.responseEndDate</code> property instead. This property may also be set to <code>nil</code> if you create this result from a JSON object or encoded object.
+/// This property does not persist after encoding and decoding.
+@property (nonatomic, copy) NSDate * _Nullable responseEndDate;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
 @end
@@ -667,13 +718,13 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 SWIFT_CLASS_NAMED("MatchOptions")
 @interface MBMatchOptions : MBDirectionsOptions
 /// Initializes a match options object for matching locations against the road network.
-/// \param locations An array of <code>CLLocation</code> objects representing locations to attempt to match against the road network. The array should contain at least two locations (the source and destination) and at most 25 locations. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://www.mapbox.com/api-documentation/#directions">may have lower limits</a>.)
+/// \param locations An array of <code>CLLocation</code> objects representing locations to attempt to match against the road network. The array should contain at least two locations (the source and destination) and at most 25 locations. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://docs.mapbox.com/api/navigation/#directions">may have lower limits</a>.)
 ///
 /// \param profileIdentifier A string specifying the primary mode of transportation for the routes. This parameter, if set, should be set to <code>MBDirectionsProfileIdentifierAutomobile</code>, <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <code>MBDirectionsProfileIdentifierCycling</code>, or <code>MBDirectionsProfileIdentifierWalking</code>. <code>MBDirectionsProfileIdentifierAutomobile</code> is used by default.
 ///
 - (nonnull instancetype)initWithLocations:(NSArray<CLLocation *> * _Nonnull)locations profileIdentifier:(MBDirectionsProfileIdentifier _Nullable)profileIdentifier;
 /// Initializes a match options object for matching geographic coordinates against the road network.
-/// \param coordinates An array of geographic coordinates representing locations to attempt to match against the road network. The array should contain at least two locations (the source and destination) and at most 25 locations. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://www.mapbox.com/api-documentation/#directions">may have lower limits</a>.) Each coordinate is converted into a <code>Waypoint</code> object.
+/// \param coordinates An array of geographic coordinates representing locations to attempt to match against the road network. The array should contain at least two locations (the source and destination) and at most 25 locations. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://docs.mapbox.com/api/navigation/#directions">may have lower limits</a>.) Each coordinate is converted into a <code>Waypoint</code> object.
 ///
 /// \param profileIdentifier A string specifying the primary mode of transportation for the routes. This parameter, if set, should be set to <code>MBDirectionsProfileIdentifierAutomobile</code>, <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <code>MBDirectionsProfileIdentifierCycling</code>, or <code>MBDirectionsProfileIdentifierWalking</code>. <code>MBDirectionsProfileIdentifierAutomobile</code> is used by default.
 ///
@@ -682,14 +733,17 @@ SWIFT_CLASS_NAMED("MatchOptions")
 /// If true, the input locations are re-sampled for improved map matching results. The default is  <code>false</code>.
 @property (nonatomic) BOOL resamplesTraces;
 /// An index set containing indices of two or more items in <code>coordinates</code>. These will be represented by <code>Waypoint</code>s in the resulting <code>Match</code> objects.
-/// Use this property when the <code>includesSteps</code> property is <code>true</code> or when <code>coordinates</code> represents a trace with a high sample rate. If this property is <code>nil</code>, the resulting <code>Match</code> objects contain a waypoint for each coordinate in the match options.
+/// Use this property when the <code>DirectionsOptions.includesSteps</code> property is <code>true</code> or when <code>coordinates</code> represents a trace with a high sample rate. If this property is <code>nil</code>, the resulting <code>Match</code> objects contain a waypoint for each coordinate in the match options.
 /// If specified, each index must correspond to a valid index in <code>coordinates</code>, and the index set must contain 0 and the last index (one less than <code>endIndex</code>) of <code>coordinates</code>.
-@property (nonatomic, copy) NSIndexSet * _Nullable waypointIndices;
+@property (nonatomic, copy) NSIndexSet * _Nullable waypointIndices SWIFT_DEPRECATED_MSG("Use Waypoint.separatesLegs instead.");
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
 - (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureCoding;)
 + (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
+@property (nonatomic, readonly, copy) NSArray<NSURLQueryItem *> * _Nonnull URLQueryItems;
 @end
+
+
 
 /// A system of units of measuring distances and other quantities.
 typedef SWIFT_ENUM_NAMED(NSUInteger, MBMeasurementSystem, "MeasurementSystem", closed) {
@@ -717,6 +771,8 @@ SWIFT_CLASS_NAMED("Route")
 ///
 - (nonnull instancetype)initWithJSON:(NSDictionary<NSString *, id> * _Nonnull)json waypoints:(NSArray<MBWaypoint *> * _Nonnull)waypoints routeOptions:(MBRouteOptions * _Nonnull)options OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureCoding;)
++ (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class MBRouteStep;
@@ -801,7 +857,7 @@ SWIFT_CLASS_NAMED("RouteOptions")
 ///
 - (nonnull instancetype)initWithCoordinates:(NSArray<NSValue *> * _Nonnull)coordinates profileIdentifier:(MBDirectionsProfileIdentifier _Nullable)profileIdentifier;
 /// Initializes a route options object for routes between the given waypoints and an optional profile identifier.
-/// \param waypoints An array of <code>Waypoint</code> objects representing locations that the route should visit in chronological order. The array should contain at least two waypoints (the source and destination) and at most 25 waypoints. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://www.mapbox.com/api-documentation/#directions">may have lower limits</a>.)
+/// \param waypoints An array of <code>Waypoint</code> objects representing locations that the route should visit in chronological order. The array should contain at least two waypoints (the source and destination) and at most 25 waypoints. (Some profiles, such as <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <a href="https://docs.mapbox.com/api/navigation/#directions">may have lower limits</a>.)
 ///
 /// \param profileIdentifier A string specifying the primary mode of transportation for the routes. This parameter, if set, should be set to <code>MBDirectionsProfileIdentifierAutomobile</code>, <code>MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</code>, <code>MBDirectionsProfileIdentifierCycling</code>, or <code>MBDirectionsProfileIdentifierWalking</code>. <code>MBDirectionsProfileIdentifierAutomobile</code> is used by default.
 ///
@@ -824,6 +880,7 @@ SWIFT_CLASS_NAMED("RouteOptions")
 /// The route classes that the calculated routes will avoid.
 /// Currently, you can only specify a single road class to avoid.
 @property (nonatomic) MBRoadClasses roadClassesToAvoid;
+@property (nonatomic, readonly, copy) NSArray<NSURLQueryItem *> * _Nonnull URLQueryItems;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureCoding;)
 + (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
 - (id _Nonnull)copyWithZone:(struct _NSZone * _Nullable)zone SWIFT_WARN_UNUSED_RESULT;
@@ -845,6 +902,11 @@ SWIFT_CLASS_NAMED("RouteOptionsV4")
 @property (nonatomic) BOOL includesShapes;
 - (nonnull instancetype)initWithWaypoints:(NSArray<MBWaypoint *> * _Nonnull)waypoints profileIdentifier:(MBDirectionsProfileIdentifier _Nullable)profileIdentifier OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
+- (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureCoding;)
++ (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
+- (id _Nonnull)copyWithZone:(struct _NSZone * _Nullable)zone SWIFT_WARN_UNUSED_RESULT;
+@property (nonatomic, readonly, copy) NSArray<NSURLQueryItem *> * _Nonnull URLQueryItems;
 @end
 
 /// A <code>RouteShapeFormat</code> indicates the format of a route or match shape in the raw HTTP response.
@@ -883,7 +945,7 @@ SWIFT_CLASS_NAMED("RouteStep")
 @interface MBRouteStep : NSObject <NSSecureCoding>
 /// Initializes a new route step object based on the given JSON dictionary representation.
 /// Normally, you do not create instances of this class directly. Instead, you receive route step objects as part of route objects when you request directions using the <code>Directions.calculateDirections(options:completionHandler:)</code> method, setting the <code>includesSteps</code> option to <code>true</code> in the <code>RouteOptions</code> object that you pass into that method.
-/// \param json A JSON object that conforms to the <a href="https://www.mapbox.com/api-documentation/#routestep-object">route step</a> format described in the Directions API documentation.
+/// \param json A JSON object that conforms to the <a href="https://docs.mapbox.com/api/navigation/#route-step-object">route step</a> format described in the Directions API documentation.
 ///
 - (nonnull instancetype)initWithJSON:(NSDictionary<NSString *, id> * _Nonnull)json options:(MBRouteOptions * _Nonnull)options;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
@@ -893,7 +955,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class) BOOL supportsSecureCoding;)
 - (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 /// An array of geographic coordinates defining the path of the route step from the location of the maneuver to the location of the next step’s maneuver.
 /// The value of this property may be <code>nil</code>, for example when the maneuver type is <code>arrive</code>.
-/// Using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display a portion of a route on an <code>MGLMapView</code>.
+/// Using the <a href="https://docs.mapbox.com/ios/maps/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display a portion of a route on an <code>MGLMapView</code>.
 @property (nonatomic, readonly, copy) NSArray<NSValue *> * _Nullable coordinates;
 /// The number of coordinates.
 /// The value of this property may be zero, for example when the maneuver type is <code>arrive</code>.
@@ -902,7 +964,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class) BOOL supportsSecureCoding;)
 @property (nonatomic, readonly) NSUInteger coordinateCount;
 /// Retrieves the coordinates.
 /// The array may be empty, for example when the maneuver type is <code>arrive</code>.
-/// Using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://github.com/mapbox/mapbox-gl-native/tree/master/platform/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display a portion of a route on an <code>MGLMapView</code>.
+/// Using the <a href="https://docs.mapbox.com/ios/maps/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">Mapbox Maps SDK for macOS</a>, you can create an <code>MGLPolyline</code> object using these coordinates to display a portion of a route on an <code>MGLMapView</code>.
 /// precondition:
 /// <code>coordinates</code> must be large enough to hold <code>coordinateCount</code> instances of <code>CLLocationCoordinate2D</code>.
 /// note:
@@ -997,7 +1059,7 @@ SWIFT_CLASS_NAMED("SpokenInstruction")
 /// This representation is appropriate for speech synthesizers that support the <a href="https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language">Speech Synthesis Markup Language</a> (SSML), such as <a href="https://aws.amazon.com/polly/">Amazon Polly</a>. Numbers and names are marked up to ensure correct pronunciation. For speech synthesizers that lack SSML support, use the <code>text</code> property instead.
 @property (nonatomic, readonly, copy) NSString * _Nonnull ssmlText;
 /// Initializes a new spoken instruction object based on the given JSON dictionary representation.
-/// \param json A JSON object that conforms to the <a href="https://www.mapbox.com/api-documentation/#voice-instruction-object">voice instruction</a> format described in the Directions API documentation.
+/// \param json A JSON object that conforms to the <a href="https://docs.mapbox.com/api/navigation/#voice-instruction-object">voice instruction</a> format described in the Directions API documentation.
 ///
 - (nonnull instancetype)initWithJSON:(NSDictionary<NSString *, id> * _Nonnull)json;
 /// Initialize a <code>SpokenInstruction</code>.
@@ -1046,17 +1108,19 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
 - (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 - (id _Nonnull)copyWithZone:(struct _NSZone * _Nullable)zone SWIFT_WARN_UNUSED_RESULT;
+- (BOOL)isEqual:(id _Nullable)object SWIFT_WARN_UNUSED_RESULT;
+- (BOOL)isEqualToWaypoint:(MBWaypoint * _Nullable)other SWIFT_WARN_UNUSED_RESULT;
 /// The geographic coordinate of the waypoint.
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 /// The radius of uncertainty for the waypoint, measured in meters.
 /// For a route to be considered viable, it must enter this waypoint’s circle of uncertainty. The <code>coordinate</code> property identifies the center of the circle, while this property indicates the circle’s radius. If the value of this property is negative, a route is considered viable regardless of whether it enters this waypoint’s circle of uncertainty, subject to an undefined maximum distance.
 /// By default, the value of this property is a negative number.
-/// This property corresponds to the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>radiuses</code></a> query parameter in the Mapbox Directions API.
+/// This property corresponds to the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>radiuses</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
 @property (nonatomic) CLLocationAccuracy coordinateAccuracy;
 /// The geographic coordinate of the waypoint’s target.
 /// The waypoint’s target affects arrival instructions without affecting the route’s shape. For example, a delivery or ride hailing application may specify a waypoint target that represents a drop-off location. The target determines whether the arrival visual and spoken instructions indicate that the destination is “on the left” or “on the right”.
 /// By default, this property is set to <code>kCLLocationCoordinate2DInvalid</code>, meaning the waypoint has no target. This property is ignored on the first waypoint of a <code>RouteOptions</code> object, on any waypoint of a <code>MatchOptions</code> object, or on any waypoint of a <code>RouteOptions</code> object if <code>DirectionsOptions.includesSteps</code> is set to <code>false</code>.
-/// This property corresponds to the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>waypoint_targets</code></a> query parameter in the Mapbox Directions API.
+/// This property corresponds to the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>waypoint_targets</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
 @property (nonatomic) CLLocationCoordinate2D targetCoordinate;
 /// The direction from which a route must approach this waypoint in order to be considered viable.
 /// This property is measured in degrees clockwise from true north. A value of 0 degrees means due north, 90 degrees means due east, 180 degrees means due south, and so on. If the value of this property is negative, a route is considered viable regardless of the direction from which it approaches this waypoint.
@@ -1064,22 +1128,28 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureC
 /// For driving directions, this property can be useful for avoiding a route that begins by going in the direction opposite the current direction of travel. For example, if you know the user is moving eastwardly and the first waypoint is the user’s current location, specifying a heading of 90 degrees and a heading accuracy of 90 degrees for the first waypoint avoids a route that begins with a “head west” instruction.
 /// You should be certain that the user is in motion before specifying a heading and heading accuracy; otherwise, you may be unnecessarily filtering out the best route. For example, suppose the user is sitting in a car parked in a driveway, facing due north, with the garage in front and the street to the rear. In that case, specifying a heading of 0 degrees and a heading accuracy of 90 degrees may result in a route that begins on the back alley or, worse, no route at all. For this reason, it is recommended that you only specify a heading and heading accuracy when automatically recalculating directions due to the user deviating from the route.
 /// By default, the value of this property is a negative number, meaning that a route is considered viable regardless of the direction of approach.
-/// This property corresponds to the angles in the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>bearings</code></a> query parameter in the Mapbox Directions API.
+/// This property corresponds to the angles in the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>bearings</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
 @property (nonatomic) CLLocationDirection heading;
 /// The maximum tolerance, in degrees, within which a route’s approach to a waypoint may differ from <code>heading</code> in either direction but still be considered viable.
 /// A value of 0 degrees means that the approach must match the specified <code>heading</code> exactly – an unlikely scenario. A value of 180 degrees or more means that the approach may be as much as 180 degrees in either direction from the specified <code>heading</code>, effectively allowing a candidate route to approach the waypoint from any direction.
 /// If you set the <code>heading</code> property, you should set this property to a value such as 90 degrees, to avoid filtering out routes whose approaches differ only slightly from the specified <code>heading</code>. Otherwise, if the <code>heading</code> property is set to a negative value, this property is ignored.
 /// By default, the value of this property is a negative number, meaning that a route is considered viable regardless of the direction of approach.
-/// This property corresponds to the ranges in the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>bearings</code></a> query parameter in the Mapbox Directions API.
+/// This property corresponds to the ranges in the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>bearings</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
 @property (nonatomic) CLLocationDirection headingAccuracy;
-/// The name of the waypoint.
-/// This property does not affect the route, but you can set the name of a waypoint you pass into a <code>RouteOptions</code> object to help you distinguish one waypoint from another in the array of waypoints passed into the completion handler of the <code>Directions.calculate(_:completionHandler:)</code> method. This property has no effect if <code>DirectionsOptions.includesSteps</code> is set to <code>false</code>.
-/// This property corresponds to the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>waypoint_names</code></a> query parameter in the Mapbox Directions API.
-@property (nonatomic, copy) NSString * _Nullable name;
 /// A boolean value indicating whether arriving on opposite side is allowed.
 /// This property has no effect if <code>DirectionsOptions.includesSteps</code> is set to <code>false</code>.
-/// This property corresponds to the <a href="https://www.mapbox.com/api-documentation/#retrieve-directions"><code>approaches</code></a> query parameter in the Mapbox Directions API.
+/// This property corresponds to the <a href="https://www.mapbox.com/api-documentation/navigation/#retrieve-directions"><code>approaches</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
 @property (nonatomic) BOOL allowsArrivingOnOppositeSide;
+/// The name of the waypoint.
+/// This property does not affect the route, but you can set the name of a waypoint you pass into a <code>RouteOptions</code> object to help you distinguish one waypoint from another in the array of waypoints passed into the completion handler of the <code>Directions.calculate(_:completionHandler:)</code> method. This property has no effect if <code>DirectionsOptions.includesSteps</code> is set to <code>false</code>.
+/// This property corresponds to the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>waypoint_names</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
+@property (nonatomic, copy) NSString * _Nullable name;
+/// A Boolean value indicating whether the waypoint is significant enough to appear in the resulting routes as a waypoint separating two legs, along with corresponding guidance instructions.
+/// By default, this property is set to <code>true</code>, which means that each resulting route will include a leg that ends by arriving at the waypoint as <code>RouteLeg.destination</code> and a subsequent leg that begins by departing from the waypoint as <code>RouteLeg.source</code>. Otherwise, if this property is set to <code>false</code>, a single leg passes through the waypoint without specifically mentioning it. Regardless of the value of this property, each resulting route passes through the location specified by the <code>coordinate</code> property, accounting for approach-related properties such as <code>heading</code>.
+/// With the Mapbox Directions API, set this property to <code>false</code> if you want the waypoint’s location to influence the path that the route follows without attaching any meaning to the waypoint object itself. With the Mapbox Map Matching API, use this property when the <code>DirectionsOptions.includesSteps</code> property is <code>true</code> or when <code>coordinates</code> represents a trace with a high sample rate.
+/// This property has no effect if <code>DirectionsOptions.includesSteps</code> is set to <code>false</code>, or if <code>MatchOptions.waypointIndices</code> is non-nil.
+/// This property corresponds to the <a href="https://docs.mapbox.com/api/navigation/#retrieve-directions"><code>approaches</code></a> query parameter in the Mapbox Directions and Map Matching APIs.
+@property (nonatomic) BOOL separatesLegs;
 @property (nonatomic, readonly, copy) NSString * _Nonnull description;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_DEPRECATED_MSG("-init is unavailable");
@@ -1095,6 +1165,8 @@ SWIFT_CLASS_NAMED("Tracepoint")
 - (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) BOOL supportsSecureCoding;)
 + (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
+- (BOOL)isEqual:(id _Nullable)object SWIFT_WARN_UNUSED_RESULT;
+- (BOOL)isEqualToTracepoint:(MBTracepoint * _Nullable)other SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate coordinateAccuracy:(CLLocationAccuracy)coordinateAccuracy name:(NSString * _Nullable)name SWIFT_UNAVAILABLE;
 - (nonnull instancetype)initWithLocation:(CLLocation * _Nonnull)location heading:(CLHeading * _Nullable)heading name:(NSString * _Nullable)name SWIFT_UNAVAILABLE;
 @end
@@ -1149,7 +1221,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class) BOOL supportsSecureCoding;)
 /// Initializes a new visual instruction banner object that displays the given information.
 - (nonnull instancetype)initWithText:(NSString * _Nullable)text maneuverType:(enum MBManeuverType)maneuverType maneuverDirection:(enum MBManeuverDirection)maneuverDirection components:(NSArray<id <MBComponentRepresentable>> * _Nonnull)components degrees:(CLLocationDegrees)degrees OBJC_DESIGNATED_INITIALIZER;
 /// Initializes a new visual instruction object based on the given JSON dictionary representation.
-/// \param json A JSON object that conforms to the <a href="https://www.mapbox.com/api-documentation/#banner-instruction-object">banner instruction</a> format described in the Directions API documentation.
+/// \param json A JSON object that conforms to the <a href="https://docs.mapbox.com/api/navigation/#banner-instruction-object">banner instruction</a> format described in the Directions API documentation.
 ///
 - (nonnull instancetype)initWithJSON:(NSDictionary<NSString *, id> * _Nonnull)json;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)decoder OBJC_DESIGNATED_INITIALIZER;
@@ -1174,7 +1246,7 @@ SWIFT_CLASS_NAMED("VisualInstructionBanner")
 /// Which side of a bidirectional road the driver should drive on, also known as the rule of the road.
 @property (nonatomic) enum MBDrivingSide drivingSide;
 /// Initializes a new visual instruction banner object based on the given JSON dictionary representation and a driving side.
-/// \param json A JSON object that conforms to the <a href="https://www.mapbox.com/api-documentation/#banner-instruction-object">primary or secondary banner</a> format described in the Directions API documentation.
+/// \param json A JSON object that conforms to the <a href="https://docs.mapbox.com/api/navigation/#banner-instruction-object">primary or secondary banner</a> format described in the Directions API documentation.
 ///
 /// \param drivingSide The side of the road the user should drive on. This value should be consistent with the containing route step.
 ///
@@ -1220,7 +1292,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class) BOOL supportsSecureCoding;)
 + (BOOL)supportsSecureCoding SWIFT_WARN_UNUSED_RESULT;
 + (void)setSupportsSecureCoding:(BOOL)value;
 /// Initializes a new visual instruction component object based on the given JSON dictionary representation.
-/// \param json A JSON object that conforms to the <a href="https://www.mapbox.com/api-documentation/#banner-instruction-object">banner component</a> format described in the Directions API documentation.
+/// \param json A JSON object that conforms to the <a href="https://docs.mapbox.com/api/navigation/#banner-instruction-object">banner component</a> format described in the Directions API documentation.
 ///
 - (nonnull instancetype)initWithJSON:(NSDictionary<NSString *, id> * _Nonnull)json;
 /// Initializes a new visual instruction component object that displays the given information.

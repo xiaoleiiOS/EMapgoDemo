@@ -70,17 +70,20 @@
     _roadButton.titleEdgeInsets = UIEdgeInsetsMake(30, -37, 0, 0);
 }
 
-- (void)setDataDic:(NSDictionary *)dataDic{
-    _dataDic = dataDic;
-    _nameLabel.text = dataDic[@"name"];
-    float kMeter = [dataDic[@"distance"] floatValue]/1000.0;
+- (void)setFeature:(EMGFeature *)feature{
+    
+    _feature = feature;
+    
+    _nameLabel.text = _feature.properties.name;
+    
+    float kMeter = [_feature.properties.distance floatValue];
     if (kMeter >= 1) {
         _distanceLabel.text = [NSString stringWithFormat:@"%.2f千米", kMeter];
     }else{
-        _distanceLabel.text = [NSString stringWithFormat:@"%i米", [dataDic[@"distance"] intValue]];
+        _distanceLabel.text = [NSString stringWithFormat:@"%f米", kMeter * 1000];
     }
-//    _distanceLabel.text = [NSString stringWithFormat:@"%@米", dataDic[@"distance"]];
-    _addressLabel.text = dataDic[@"address"];
+    //    _distanceLabel.text = [NSString stringWithFormat:@"%@米", dataDic[@"distance"]];
+    _addressLabel.text = _feature.properties.label;
 }
 
 //上图片下文字按钮

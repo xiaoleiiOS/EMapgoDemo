@@ -1765,4 +1765,12 @@ MGL_EXPORT IB_DESIGNABLE
 
 @end
 
+@interface MGLMapView (EMGTool)
+
+- (void)addTrasfficLayer;
+
+- (void)removeTrasfficLayer;
+
+@end
+
 NS_ASSUME_NONNULL_END

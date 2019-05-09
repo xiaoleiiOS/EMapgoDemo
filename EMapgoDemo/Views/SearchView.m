@@ -26,7 +26,7 @@
 }
 - (UITableView *)tableView{
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 98, DEF_SCREEN_WIDTH, SafeAreaScrollHeight-98+SafeAreaTopHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, StatusBarTHeight + 78, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT - 78 - StatusBarTHeight - SafeAreaBottomHeight) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.estimatedRowHeight = 0;
@@ -53,13 +53,13 @@
         _dataArray = [[NSMutableArray alloc] init];
         
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backButton.frame = CGRectMake(0, 25, 30, 25);
-//        backButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        backButton.frame = CGRectMake(0, StatusBarTHeight + 5, 30, 25);
+        //        backButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
         [backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
         [backButton addTarget:self action:@selector(canButtonClick) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:backButton];
         
-        _searchField = [[UITextField alloc] initWithFrame:CGRectMake(30, 25, DEF_SCREEN_WIDTH-40,25)];
+        _searchField = [[UITextField alloc] initWithFrame:CGRectMake(30, CGRectGetMinY(backButton.frame), DEF_SCREEN_WIDTH-40,25)];
         _searchField.backgroundColor = [UIColor whiteColor];;
         _searchField.font = [UIFont systemFontOfSize:14];
         _searchField.textColor = [UIColor blackColor];
@@ -68,7 +68,7 @@
         _searchField.delegate = self;
         _searchField.placeholder = @"搜索";
         _searchField.leftViewMode = UITextFieldViewModeAlways;
-        _searchField.returnKeyType = UIReturnKeyDone;
+        _searchField.returnKeyType = UIReturnKeySearch;
         //添加事件
         [_searchField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         [self addSubview:_searchField];
@@ -77,14 +77,14 @@
         searchBtn.frame = CGRectMake(0, 0, 25, 25);
         searchBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
         [searchBtn setImage:[UIImage imageNamed:@"search"] forState:UIControlStateNormal];
-//        [searchBtn addTarget:self action:@selector(startSearch:) forControlEvents:UIControlEventTouchUpInside];
+        //        [searchBtn addTarget:self action:@selector(startSearch:) forControlEvents:UIControlEventTouchUpInside];
         _searchField.leftView = searchBtn;
         
         NSArray *nameArray = @[@"美食",@"地铁",@"加油站",@"酒店",@"银行"];
         int i = 0;
         for (NSString *keyword in nameArray) {
             UIButton *keywordBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            keywordBtn.frame = CGRectMake(8+DEF_SCREEN_WIDTH/5*i, 58, DEF_SCREEN_WIDTH/5-16, 30);
+            keywordBtn.frame = CGRectMake(8+DEF_SCREEN_WIDTH/5*i, CGRectGetMaxY(_searchField.frame) + 8, DEF_SCREEN_WIDTH/5-16, 30);
             keywordBtn.layer.borderWidth = 1;
             keywordBtn.layer.borderColor = [UIColor darkGrayColor].CGColor;
             keywordBtn.titleLabel.font = [UIFont systemFontOfSize:13];
@@ -104,6 +104,8 @@
 #pragma mark - UITextFielddelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    
+    [self getPOIAdderss];
     return YES;
 }
 
@@ -132,7 +134,8 @@
         _replaceBtn.layer.borderColor = [UIColor greenColor].CGColor;
     }
     
-    [self getPOIAdderss];
+    //类别目前不可用
+    //    [self getPOIAdderss];
 }
 
 - (void)requestKeyWorld:(NSNumber *)count {
@@ -144,20 +147,19 @@
 
 - (void)getPOIAdderss{
     NSDictionary *locationDic = DEF_PERSISTENT_GET_OBJECT(@"userLocation");
-    self.poiSearch.q = _searchField.text;
-    self.poiSearch.lat = locationDic[@"latitude"];
-    self.poiSearch.lon = locationDic[@"longitude"];
-    self.poiSearch.type = @"1";
-    self.poiSearch.sort = @"1";
-    self.poiSearch.size = @"30";
-    self.poiSearch.keytags = _keyString;
+    self.poiSearch.text = _searchField.text;
+    self.poiSearch.focus_point_lat = locationDic[@"latitude"];
+    self.poiSearch.focus_point_lon = locationDic[@"longitude"];
+    self.poiSearch.layers = @[@"venue"];
+    
     __weak typeof(self) weakSelf = self;
-    [_poiSearch startPOISearchWithsuccess:^(NSDictionary *data) {
+    [_poiSearch searchAutocompleteWithsuccess:^(EMGSearchModel *searchModel) {
+        
         NSLog(@"成功");
         [weakSelf.dataArray removeAllObjects];
-        for (NSDictionary *dic in data[@"list"]) {
-            [weakSelf.dataArray addObject:dic];
-        }
+        
+        weakSelf.dataArray = [NSMutableArray arrayWithArray:searchModel.features];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.tableView.hidden = NO;
             [weakSelf.tableView reloadData];
@@ -182,11 +184,15 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.dataDic = _dataArray[indexPath.row];
+    EMGFeature *feature = _dataArray[indexPath.row];
+    
+    cell.feature = feature;
     __weak typeof(self) weakSelf = self;
     cell.roadPlanBlock = ^{
         if (weakSelf.goRoadBlock) {
-            weakSelf.goRoadBlock(weakSelf.dataArray[indexPath.row]);
+            
+            NSDictionary *destinationDic = @{@"name":feature.properties.name, @"lat":[NSString stringWithFormat:@"%f", [feature.geometry.coordinates[1] floatValue]], @"lon":[NSString stringWithFormat:@"%f", [feature.geometry.coordinates[0] floatValue]]};
+            weakSelf.goRoadBlock(destinationDic);
         }
     };
     
@@ -200,7 +206,7 @@
 
 -(void)canButtonClick{
     [_searchField resignFirstResponder];
-    [UIView animateWithDuration:0.7 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         self.frame = CGRectMake(0, -DEF_SCREEN_HEIGHT, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
@@ -209,7 +215,7 @@
 - (void)showInView:(UIView *)view{
     [view addSubview:self];
     [_searchField becomeFirstResponder];
-    [UIView animateWithDuration:0.7 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         self.frame = CGRectMake(0, 0, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
         
@@ -219,12 +225,14 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [_searchField resignFirstResponder];
 }
+
+
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <EMapgoPOI/EMapgoPOI.h>
 
 @interface SearchTableViewCell : UITableViewCell
-@property(nonatomic, copy) NSDictionary *dataDic;//
+
+@property(nonatomic, copy) EMGFeature *feature;//
 @property(nonatomic, copy) void (^roadPlanBlock) (void);//
 @end

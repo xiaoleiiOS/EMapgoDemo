@@ -24,23 +24,39 @@ typedef void (^EMapLocationIsContainFailureBlock)(NSError *error);
 //终点坐标点，必须包含经纬度
 @property (nonatomic, strong) EMapgoRouteStepModel *endModel;
 
-//Routing profile; either  driving1 ,  walking1 , or  transit
+//API服务的URL.
+@property (nonatomic, copy) NSString *URL;
+
+//Routing profile; either  driving,  walking, or  transit
 @property (nonatomic, copy) NSString *profile;
 
 //Semicolon-separated list of  {longitude},{latitude} coordinate pairs to visit in order. There can be between 2 and 25 coordinates.
-//传入格式为 NSArray *arr = @[@{@"longitude":@"",@"latitude":@""},@{@"longitude":@"",@"latitude":@""}];
+//传入格式为 @[@{@"longitude":@"",@"latitude":@""},@{@"longitude":@"",@"latitude":@""}];
 @property (nonatomic, copy) NSArray *coordinates;
 
 //Whether to try to return alternative routes. An alternative is classified as a route that is significantly different than the fastest route, but also still reasonably fast. Such a route does not exist in all circumstances. Currently up to two alternatives can be returned. Can be  true or  false (default).
 @property (nonatomic, copy) NSString *alternatives;
 
+//偏好的规划类型：
+//偏好的规划类型：
+//fastest: 返回最快的路径。 (默认)
+//Shortest: 返回最短的路径。
+//highway: 返回高速优先路径。
+//nohighway: 返回躲避高速路径。
+@property (nonatomic, copy) NSString *favoritetype;
+
+//目前仅支持json格式。
+@property (nonatomic, copy) NSString *format;
+
 ///Format of the returned geometry. Allowed values are: geojson (as LineString ),  polyline with precision 5, polyline6 (a polyline with precision 6). The default value is polyline .
 @property (nonatomic, copy) NSString *geometries;
 
-//Whether to return steps and turn-by-turn instructions. Can be true or  false . The default is  false .
+//格式：true,false(默认)
+//返回规划路径的每一条线路段的步骤。
 @property (nonatomic, copy) NSString *steps;
 
-///Type of returned overview geometry. Can be  full (the most detailed geometry available),  simplified (a simplified version of the full geometry), or  false (no overview geometry). The default is  simplified .
+//格式：simplified (默认), full , false
+//概览路径的几何要素，根据是否需要在最高缩放级别下查看，选择full或者simplified。
 @property (nonatomic, copy) NSString *overview;
 
 //Whether or not to return additional metadata along the route. Possible values are:  duration ,  distance ,  speed , and  congestion . Several annotations can be used by including them as a comma-separated list. See the RouteLeg object for more details on what is included with annotations.
@@ -58,8 +74,13 @@ typedef void (^EMapLocationIsContainFailureBlock)(NSError *error);
 //Sets the allowed direction of travel when departing intermediate waypoints. If  true , the route will continue in the same direction of travel. If  false , the route may continue in the opposite direction of travel. Defaults to  true for  mapbox/driving and  false for  mapbox/walking and  mapbox/cycling .
 @property(nonatomic, copy) NSString *continue_straight;
 
-//Exclude certain road types from routing. Valid values depend on the profile in use. See below for valid  exclude values. The default is to not exclude anything from the profile selected.
-@property(nonatomic, copy) NSString *exclude;
+//格式：@[@"class", @"class"]
+//需要避免的道路类型列表，不分先后。目前支持 [@"toll", @"motorway"]。
+@property(nonatomic, copy) NSArray<NSString *> *exclude;
+
+//格式：@[geoid1,geoid2,...]
+//需要避免的道路id的列表。
+@property(nonatomic, copy) NSArray<NSString *> *excludegeoids;
 
 //Maximum distance in meters that each coordinate is allowed to move when snapped to a nearby road segment. There must be as many radiuses as there are coordinates in the request, each separated by  ; . Values can be any number greater than 0 or the string  unlimited . A  NoSegment error is returned if no routable road is found within the radius.
 @property(nonatomic, copy) NSString *radiuses;
@@ -79,6 +100,37 @@ typedef void (^EMapLocationIsContainFailureBlock)(NSError *error);
 //Language of returned turn-by-turn text instructions. See supported languages . The default is  en for English.
 @property(nonatomic, copy) NSString *language;
 
+//格式：true或者false(默认)
+@property (nonatomic, copy) NSString *traffic;
+
+//可传入值:
+//None: 返回用户不可阅读的结构化数据。(默认)
+//Text: 返回用户可直接理解的文本数据。
+@property (nonatomic, copy) NSString *instructionsmsg;
+
+//根据交通信息计算通行时间。
+//可传入值：
+//False：不计算交通状况相关通行时间。(默认)
+//true：根据各种交通信息计算通行时间。结果会在路径规划返回结果的summaries中的notraffictraveltime字段及liveTrafficIncidentsTravelTime字段展示。
+@property (nonatomic, copy) NSString *traffictraveltime;
+
+/**
+ 路径规划，对于之前的版本方法修改，v2.0版本废弃startRoadPlanningWithsuccess，换为此方法
+
+  注：必须包含起始点和终点的经纬度，才可以调用
+ @param successBlock 成功回调---返回数据(路线数据："data")
+ @param failureBlock 失败回调
+ */
+- (void)roadPlanningWithsuccess:(EMapRoadPlanSuccessBlock)successBlock failure:(EMapRoadPlanFailureBlock)failureBlock;
+
+
+
+/**
+ 路径规划，v2.0以后废弃，替换为roadPlanningWithsuccess。
+
+ @param successBlock 成功回调---返回数据(路线数据："data")
+ @param failureBlock 失败回调
+ */
 - (void)startRoadPlanningWithsuccess:(EMapRoadPlanSuccessBlock)successBlock failure:(EMapRoadPlanFailureBlock)failureBlock;
 
 

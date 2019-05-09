@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B4862D02283D6D7004D6F76 /* MBXAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4862CE2283D6D7004D6F76 /* MBXAnnotationView.m */; };
 		9BA7B0002139337200C5C8CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA7AFFF2139337200C5C8CE /* AppDelegate.m */; };
 		9BA7B0062139337200C5C8CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BA7B0042139337200C5C8CE /* Main.storyboard */; };
 		9BA7B0082139337400C5C8CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA7B0072139337400C5C8CE /* Assets.xcassets */; };
@@ -62,6 +63,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9B4862CE2283D6D7004D6F76 /* MBXAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBXAnnotationView.m; sourceTree = "<group>"; };
+		9B4862CF2283D6D7004D6F76 /* MBXAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBXAnnotationView.h; sourceTree = "<group>"; };
 		9BA7AFFB2139337200C5C8CE /* EMapgoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EMapgoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BA7AFFE2139337200C5C8CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9BA7AFFF2139337200C5C8CE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -178,14 +181,16 @@
 		9BA7B02421393AC200C5C8CE /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9BA7B02521393AC200C5C8CE /* FouctionTableViewCell.m */,
-				9BA7B02621393AC200C5C8CE /* SearchTableViewCell.m */,
-				9BA7B02721393AC200C5C8CE /* RoutePlanTableViewCell.h */,
-				9BA7B02821393AC200C5C8CE /* SearchView.m */,
-				9BA7B02921393AC200C5C8CE /* SearchTableViewCell.h */,
 				9BA7B02A21393AC200C5C8CE /* FouctionTableViewCell.h */,
-				9BA7B02B21393AC200C5C8CE /* RoutePlanTableViewCell.m */,
+				9BA7B02521393AC200C5C8CE /* FouctionTableViewCell.m */,
+				9BA7B02921393AC200C5C8CE /* SearchTableViewCell.h */,
+				9BA7B02621393AC200C5C8CE /* SearchTableViewCell.m */,
 				9BA7B02C21393AC200C5C8CE /* SearchView.h */,
+				9BA7B02821393AC200C5C8CE /* SearchView.m */,
+				9BA7B02721393AC200C5C8CE /* RoutePlanTableViewCell.h */,
+				9BA7B02B21393AC200C5C8CE /* RoutePlanTableViewCell.m */,
+				9B4862CF2283D6D7004D6F76 /* MBXAnnotationView.h */,
+				9B4862CE2283D6D7004D6F76 /* MBXAnnotationView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -297,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BA7B03E21393AC300C5C8CE /* SearchView.m in Sources */,
+				9B4862D02283D6D7004D6F76 /* MBXAnnotationView.m in Sources */,
 				9BA7B020213935AD00C5C8CE /* FunctionViewController.m in Sources */,
 				9BA7B03D21393AC300C5C8CE /* SearchTableViewCell.m in Sources */,
 				9BA7B03C21393AC300C5C8CE /* FouctionTableViewCell.m in Sources */,

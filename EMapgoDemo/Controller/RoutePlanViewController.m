@@ -29,12 +29,15 @@
 @property (nonatomic, strong) UITableView *tableView;//
 @end
 
+#define TableViewTop (105 + StatusBarTHeight)
+#define TableViewHeight (DEF_SCREEN_HEIGHT - TableViewTop)
+
 @implementation RoutePlanViewController
 - (MGLMapView *)mapView{
     if (_mapView == nil) {
 //        NSURL *url = [NSURL URLWithString:@"http://tiles.emapgo.cn/styles/outdoor/style.json"];
         NSURL *url = [NSURL URLWithString:@"http://tiles.emapgo.cn/styles/outdoor/style.json"];
-        _mapView = [[MGLMapView alloc] initWithFrame:CGRectMake(0, 125, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT-125) styleURL:url];
+        _mapView = [[MGLMapView alloc] initWithFrame:CGRectMake(0, TableViewTop, DEF_SCREEN_WIDTH, TableViewHeight) styleURL:url];
         _mapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _mapView.delegate = self;
     }
@@ -42,7 +45,7 @@
 }
 - (UITableView *)tableView{
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, DEF_SCREEN_HEIGHT-100, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT-125) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, DEF_SCREEN_HEIGHT - 100, DEF_SCREEN_WIDTH, TableViewHeight) style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.estimatedRowHeight = 0;
@@ -68,22 +71,23 @@
     self.view.backgroundColor = getColor(@"ffffff");
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    backButton.frame = CGRectMake(0, 25, 30, 25);
+    backButton.frame = CGRectMake(0, StatusBarTHeight + 5, 30, 25);
     //        backButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [backButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
     
-    _startField = [[UITextField alloc] initWithFrame:CGRectMake(30, 25, DEF_SCREEN_WIDTH-40,30)];
+    _startField = [[UITextField alloc] initWithFrame:CGRectMake(30, CGRectGetMinY(backButton.frame), DEF_SCREEN_WIDTH-40,30)];
     _startField.backgroundColor = getColor(@"f2f2f2");
     _startField.font = [UIFont systemFontOfSize:14];
     _startField.textColor = [UIColor blackColor];
     _startField.placeholder = @"输入起点";
     _startField.text = @"我的位置";
     _startField.delegate = self;
-    _startField.clearButtonMode = UITextFieldViewModeAlways;
+//    _startField.clearButtonMode = UITextFieldViewModeAlways;
     _startField.leftViewMode = UITextFieldViewModeAlways;
     _startField.returnKeyType = UIReturnKeyDone;
+    _startField.enabled = NO;
     [self.view addSubview:_startField];
     
     UIButton *greenPointBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -92,16 +96,18 @@
     [greenPointBtn setImage:[UIImage imageNamed:@"greenPoint"] forState:UIControlStateNormal];
     _startField.leftView = greenPointBtn;
     
-    _endField = [[UITextField alloc] initWithFrame:CGRectMake(30, 55, DEF_SCREEN_WIDTH-40,30)];
+    _endField = [[UITextField alloc] initWithFrame:CGRectMake(30, CGRectGetMaxY(_startField.frame), DEF_SCREEN_WIDTH-40,30)];
     _endField.backgroundColor = getColor(@"f2f2f2");
     _endField.font = [UIFont systemFontOfSize:14];
     _endField.textColor = [UIColor blackColor];
     _endField.placeholder = @"输入终点";
     _endField.text = _destinationDic[@"name"];
     _endField.delegate = self;
-    _endField.clearButtonMode = UITextFieldViewModeAlways;
+//    _endField.clearButtonMode = UITextFieldViewModeAlways;
+    _endField.enabled = NO;
     _endField.leftViewMode = UITextFieldViewModeAlways;
     _endField.returnKeyType = UIReturnKeyDone;
+    
     [self.view addSubview:_endField];
     
     UIButton *redPointBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -110,14 +116,14 @@
     [redPointBtn setImage:[UIImage imageNamed:@"redPoint"] forState:UIControlStateNormal];
     _endField.leftView = redPointBtn;
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(60, 55, DEF_SCREEN_WIDTH-80, 1)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(60, CGRectGetMaxY(_startField.frame), DEF_SCREEN_WIDTH-80, 1)];
     lineView.backgroundColor = getColor(@"e6e6e6");
     [self.view addSubview:lineView];
     
     NSArray *nameArr = @[@"驾车",@"骑行",@"步行"];
     for (int i = 0; i < 3; i ++) {
         UIButton *roadStyleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        roadStyleBtn.frame = CGRectMake(60*i, 90, 60, 30);
+        roadStyleBtn.frame = CGRectMake(60*i, CGRectGetMaxY(_endField.frame) + 5, 60, 30);
         roadStyleBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [roadStyleBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [roadStyleBtn setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
@@ -136,21 +142,32 @@
 }
 
 - (void)getData{
+    
     NSDictionary *locationDic = DEF_PERSISTENT_GET_OBJECT(@"userLocation");
+    EMapgoRouteStepModel *startModel = [[EMapgoRouteStepModel alloc] init];
+    startModel.lon = locationDic[@"longitude"];
+    startModel.lat = locationDic[@"latitude"];
+    EMapgoRouteStepModel *endModel = [[EMapgoRouteStepModel alloc] init];
+    endModel.lon = self.destinationDic[@"lon"];
+    endModel.lat = self.destinationDic[@"lat"];
+    
     EMapRoadPlanning *roadplan = [[EMapRoadPlanning alloc] init];
+    roadplan.URL = @"111.203.245.100:3000";
     roadplan.profile = @"driving";
-    roadplan.coordinates = @[@{@"longitude":locationDic[@"longitude"],@"latitude":locationDic[@"latitude"]},@{@"longitude":_destinationDic[@"lon"],@"latitude":_destinationDic[@"lat"]}];
     roadplan.geometries = @"polyline";
     roadplan.steps = @"true";
     roadplan.overview = @"full";
     roadplan.alternatives = @"true";
+    roadplan.startModel = startModel;
+    roadplan.endModel = endModel;
+    
     __weak typeof(self) weakSelf = self;
-    [roadplan startRoadPlanningWithsuccess:^(NSDictionary *data) {
-        NSLog(@"aaaa");
+    [roadplan roadPlanningWithsuccess:^(NSDictionary *data) {
+        
         weakSelf.requestDic = data;
         EMapRoadPlanDataManager *dataM = [[EMapRoadPlanDataManager alloc] initWithRoadData:data];
         EMapgoRouteDetailModel *model = dataM.roadDetailArray[0];
-        NSLog(@"%@", model.roadDistance);
+        
         [weakSelf.dataArray addObjectsFromArray:dataM.roadStepArray];
         weakSelf.nowRouteArray = dataM.roadStepArray[0];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -208,10 +225,10 @@
     if (btn == _planReplaceBtn) {
         btn.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.7 animations:^{
-            if (self.tableView.frame.origin.y == 125) {
-                self.tableView.frame = CGRectMake(0, DEF_SCREEN_HEIGHT-100, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT-125);
+            if (self.tableView.frame.origin.y == TableViewTop) {
+                self.tableView.frame = CGRectMake(0, DEF_SCREEN_HEIGHT-100, DEF_SCREEN_WIDTH, TableViewHeight);
             }else{
-                self.tableView.frame = CGRectMake(0, 125, DEF_SCREEN_WIDTH, DEF_SCREEN_HEIGHT-125);
+                self.tableView.frame = CGRectMake(0, TableViewTop, DEF_SCREEN_WIDTH, TableViewHeight);
             }
         } completion:^(BOOL finished) {
             btn.userInteractionEnabled = YES;
@@ -281,6 +298,8 @@
 //    }
 //}
 
+#pragma mark - 添加路线规划道路
+
 - (void)addRoadLineWithDic:(NSDictionary *)routeDic{
     if (self.mapView.annotations) {
         [self.mapView removeAnnotations:self.mapView.annotations];
@@ -297,7 +316,8 @@
     [route getCoordinates:routeCoordinates];
     MGLPolyline *polyline = [MGLPolyline polylineWithCoordinates:routeCoordinates count:route.coordinateCount];
     
-    [self.mapView addAnnotation:polyline];
+    [self.mapView addRoutePlanningArrowStyleWithIdentifier:@"polyline" shape:polyline lineWidth:10 lineColor:[UIColor colorWithRed:95 / 255.5 green:153 / 255.0 blue:255 / 255.0 alpha:1] borderColor:[UIColor colorWithRed:46 / 255.5 green:88 / 255.0 blue:167 / 255.0 alpha:1]];
+    
     [self.mapView setVisibleCoordinates:routeCoordinates count:route.coordinateCount edgePadding:UIEdgeInsetsMake(80, 80, 80, 80) animated:YES];
     
     _selectPolyline = polyline;
